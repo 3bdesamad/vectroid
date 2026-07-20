@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vectroid — SVG to Vector Drawable Converter</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Dark Theme by default (Linear/Notion inspired) */
+  --bg:#0c0d0f;
+  --sb:#111215;
+  --panel:#16171a;
+  --sf:#1e1f22;
+  --sf2:#2b2c30;
+  --bd:rgba(255,255,255,0.06);
+  --bd2:rgba(255,255,255,0.12);
+  --ac:#1c90db;
+  --ac2:#2fa2e8;
+  --tx:#ececf0;
+  --tx2:rgba(240,240,248,.62);
+  --tx3:rgba(240,240,248,.35);
+  --ok:#22c55e;
+  --er:#ef4444;
+  --r:6px;
+  --sh:0 4px 24px rgba(0,0,0,.45);
+}
+
+body.theme-light {
+  /* Light Theme (Linear/Notion inspired) */
+  --bg:#fcfcfd;
+  --sb:#f4f4f6;
+  --panel:#f8f9fa;
+  --sf:#ffffff;
+  --sf2:#f1f3f5;
+  --bd:#e9ecef;
+  --bd2:#dee2e6;
+  --ac:#1c90db;
+  --ac2:#2fa2e8;
+  --tx:#1a1d20;
+  --tx2:#495057;
+  --tx3:#adb5bd;
+  --ok:#198754;
+  --er:#dc3545;
+  --sh:0 1px 3px 0 rgba(0,0,0,0.05), 0 1px 2px -1px rgba(0,0,0,0.05);
+}
+
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column;height:100vh;transition:background-color .2s, color .2s}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+
+/* ── HEADER ──────────────────────────────────────────────── */
+.app-header{height:54px;background:var(--sb);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 1.5rem;justify-content:space-between;flex-shrink:0;transition:all .2s}
+.logo-group{display:flex;align-items:center;gap:10px}
+.logo{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,var(--ac),#00b4d8);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(28,144,219,0.25);padding:5px}
+.logo-img{width:100%;height:100%;display:block;filter:brightness(0) invert(1)}
+.logo-text{font-size:0.95rem;font-weight:700;letter-spacing:-0.01em;color:var(--tx)}
+.logo-badge{font-size:0.68rem;font-weight:700;background:rgba(28,144,219,0.12);color:var(--ac);padding:2px 6px;border-radius:6px;}
+
+.header-actions{display:flex;align-items:center;gap:12px}
+.header-btn{width:32px;height:32px;border-radius:6px;border:1px solid var(--bd2);background:var(--sf);color:var(--tx2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .14s;box-shadow:var(--sh)}
+.header-btn:hover{background:var(--sf2);color:var(--tx)}
+.header-link{font-size:0.8rem;font-weight:600;color:var(--tx2);text-decoration:none;transition:color .14s}
+.header-link:hover{color:var(--ac)}
+
+/* ── MAIN WORKSPACE ──────────────────────────────────────── */
+.workspace{flex:1;display:flex;overflow:hidden;}
+.workspace-left{width:360px;border-right:1px solid var(--bd);background:var(--panel);display:flex;flex-direction:column;padding:1.5rem;overflow-y:auto;gap:1.5rem;flex-shrink:0;transition:all .2s}
+.workspace-right{flex:1;display:flex;flex-direction:column;background:var(--bg);overflow-y:auto;padding:2rem;transition:all .2s}
+
+/* Cards layout */
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:6px;overflow:hidden;transition:all .2s}
+.card-header{padding:1rem 1.25rem;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:between;}
+.card-header h3{font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--tx3)}
+.card-body{padding:1.25rem}
+
+/* Drop Area */
+.drop-area{border:2px dashed var(--bd2);border-radius:6px;padding:2.2rem 1.5rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg)}
+.drop-area:hover,.drop-area.over{border-color:var(--ac);background:var(--sf2);transform:translateY(-1px)}
+.drop-ico{font-size:2.4rem;opacity:.65;margin-bottom:.5rem}
+.drop-t{font-size:0.95rem;font-weight:600;margin-bottom:.3rem;color:var(--tx)}
+.drop-s{font-size:0.8rem;color:var(--tx3);margin-bottom:0.9rem;line-height:1.4}
+
+/* Buttons */
+.btn{height:36px;padding:0 1.2rem;border-radius:6px;border:1px solid var(--bd2);background:var(--sf);color:var(--tx2);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all .14s;font-family:inherit;font-size:0.82rem;font-weight:600;box-shadow:var(--sh);text-decoration:none}
+.btn:hover{background:var(--sf2);color:var(--tx);border-color:var(--bd2)}
+.btn-primary{background:var(--ac);border-color:var(--ac);color:#fff;box-shadow:0 2px 8px rgba(28,144,219,0.2)}
+.btn-primary:hover{background:var(--ac2);border-color:var(--ac2);color:#fff}
+
+/* Settings Form */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--tx3)}
+.form-input{background:var(--bg);border:1px solid var(--bd2);border-radius:6px;color:var(--tx);padding:.45rem .75rem;font-size:.85rem;font-family:'JetBrains Mono',monospace;outline:none;transition:border-color .15s;width:100%;height:38px}
+.form-input:focus{border-color:var(--ac)}
+.checkbox-container{display:flex;align-items:center;gap:.5rem;cursor:pointer;padding:.3rem 0}
+.checkbox-container input{accent-color:var(--ac);width:16px;height:16px;cursor:pointer}
+.checkbox-container span{font-size:0.82rem;color:var(--tx2);font-weight:500}
+
+/* Converted File List */
+.flist{display:flex;flex-direction:column;max-height:280px;overflow-y:auto;}
+.fi{display:flex;align-items:center;gap:.65rem;padding:.75rem 1rem;cursor:pointer;transition:background .1s;border-bottom:1px solid var(--bd)}
+.fi:last-child{border-bottom:none}
+.fi:hover{background:var(--sf2)}
+.fi.sel{background:rgba(28,144,219,.08)}
+.fi-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--ac)}
+.fi-dot.er{background:var(--er)}
+.fi-body{flex:1;min-width:0}
+.fi-name{font-size:.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx)}
+.fi-sub{font-size:.7rem;color:var(--tx3);margin-top:1px}
+.fi-time{font-size:.7rem;color:var(--tx3);flex-shrink:0}
+
+/* Empty State Placeholder */
+.empty-state{text-align:center;padding:5rem 2rem;max-width:520px;margin:auto;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.empty-state-icon{font-size:3.5rem;line-height:1;margin-bottom:0.5rem;opacity:0.8;color:var(--ac)}
+.empty-state h2{font-size:1.35rem;font-weight:700;color:var(--tx);letter-spacing:-0.02em}
+.empty-state p{font-size:0.88rem;color:var(--tx2);line-height:1.6}
+
+/* Details and Output */
+.meta-row{display:flex;gap:1.5rem;font-size:0.85rem;background:var(--panel);padding:0.75rem 1rem;border-radius:6px;border:1px solid var(--bd);margin-bottom:1.5rem}
+.meta-item{color:var(--tx2)}
+.meta-item strong{color:var(--tx3);font-weight:500;margin-right:4px}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;letter-spacing:.02em}
+.t-ok{background:rgba(34,197,94,.11);color:#22c55e;border:1px solid rgba(34,197,94,.2)}
+.t-er{background:rgba(239,68,68,.11);color:#ef4444;border:1px solid rgba(239,68,68,.2)}
+
+.sec-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);margin-bottom:.85rem;display:flex;align-items:center;gap:.6rem}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--bd)}
+
+/* Preview Block */
+.preview-block{background:var(--sf);border:1px solid var(--bd);border-radius:6px;overflow:hidden;margin-bottom:1.8rem;box-shadow:var(--sh)}
+.pbox{display:flex;align-items:center;justify-content:center;padding:3rem;min-height:240px;transition:background .18s}
+.pbox.bg-d{background:#0e0e11}
+.pbox.bg-l{background:#f8f9fa;border:1px solid rgba(0,0,0,0.03)}
+.pbox.bg-g{background-color:#f1f3f5;background-image:linear-gradient(45deg,#e9ecef 25%,transparent 25%),linear-gradient(-45deg,#e9ecef 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e9ecef 75%),linear-gradient(-45deg,transparent 75%,#e9ecef 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0}
+body.theme-dark .pbox.bg-g{background-color:#161719;background-image:linear-gradient(45deg,#202124 25%,transparent 25%),linear-gradient(-45deg,#202124 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#202124 75%),linear-gradient(-45deg,transparent 75%,#202124 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0}
+.pbox svg{max-height:170px;max-width:100%;display:block}
+.pfooter{display:flex;align-items:center;gap:.45rem;padding:.6rem 1rem;border-top:1px solid var(--bd);background:var(--panel)}
+.pf-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tx3);margin-right:auto}
+.bgb{padding:.3rem .75rem;border-radius:6px;font-size:.72rem;font-weight:700;border:1px solid var(--bd2);background:var(--sf);color:var(--tx2);cursor:pointer;transition:all .12s;font-family:inherit;text-transform:uppercase;letter-spacing:.03em;box-shadow:var(--sh)}
+.bgb:hover{color:var(--tx);background:var(--sf2)}
+.bgb.on{background:rgba(28,144,219,.08);border-color:rgba(28,144,219,.3);color:var(--ac)}
+body.theme-dark .bgb.on{background:rgba(28,144,219,.12);border-color:rgba(28,144,219,.32);color:#1c90db}
+
+/* XML Output Card (Notion/Linear motivated alert style) */
+.xml-alert-card {
+  background: rgba(28, 144, 219, 0.04);
+  border: 1px solid rgba(28, 144, 219, 0.16);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1.8rem;
+}
+body.theme-dark .xml-alert-card {
+  background: rgba(28, 144, 219, 0.06);
+  border: 1px solid rgba(28, 144, 219, 0.22);
+}
+.xmlh{display:flex;align-items:center;padding:.6rem 1rem;border-bottom:1px solid rgba(28, 144, 219, 0.16);background:rgba(28, 144, 219, 0.03);justify-content:space-between}
+.xmlh-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ac);display:flex;align-items:center;gap:6px;}
+.xml-act{padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;border:1px solid rgba(28, 144, 219, 0.25);background:var(--sf);color:var(--ac);cursor:pointer;transition:all .12s;font-family:inherit;box-shadow:var(--sh)}
+.xml-act:hover{background:rgba(28, 144, 219, 0.08);color:var(--ac2)}
+.xml-body{overflow:auto;max-height:360px}
+pre.xcode{padding:1.1rem;font-family:'JetBrains Mono',Consolas,monospace;font-size:.8rem;line-height:1.85;white-space:pre;color:var(--tx2);margin:0}
+body.theme-dark pre.xcode{color:rgba(255,255,255,.62)}
+.xt{color:#1c90db}
+body.theme-dark .xt{color:#7dd3fc}
+.xa{color:#2fa2e8}
+body.theme-dark .xa{color:#a5b4fc}
+.xv{color:#16a34a}
+body.theme-dark .xv{color:#86efac}
+.xd{color:#b7791f}
+body.theme-dark .xd{color:#f9a8d4}
+
+#fi{display:none}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="app-header">
+  <div class="logo-group">
+    <div class="logo">
+      <img src="assets/logo.svg" alt="logo" class="logo-img">
+    </div>
+    <span class="logo-text">Vectroid</span>
+    <span class="logo-badge">v1.0.0</span>
+  </div>
+  <div class="header-actions">
+    <button class="header-btn" id="themeToggle" title="Toggle Theme">
+      <svg class="sun-icon" style="display:none;" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="moon-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ── MAIN WORKSPACE ── -->
+<main class="workspace">
+  
+  <!-- LEFT PANEL: Upload & Configuration -->
+  <div class="workspace-left">
+    <!-- Card: Upload -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Upload SVG</h3>
+      </div>
+      <div class="card-body">
+        <div class="drop-area" id="dropArea">
+          <div class="drop-ico">📂</div>
+          <div class="drop-t">Drop SVG files here</div>
+          <div class="drop-s">or drag anywhere on the page</div>
+          <button class="btn btn-primary" id="browseBtn">Choose SVG Files</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Options -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Settings</h3>
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Width (dp)</label>
+            <input class="form-input" type="text" id="optW" value="auto" placeholder="auto">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Height (dp)</label>
+            <input class="form-input" type="text" id="optH" value="auto" placeholder="auto">
+          </div>
+        </div>
+        <label class="checkbox-container" style="margin-top: 1.2rem;">
+          <input type="checkbox" id="optFix">
+          <span>Fix fill type (evenodd → nonzero)</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Card: History list (Hidden by default, shown when files exist) -->
+    <div class="card" id="historyCard" style="display: none;">
+      <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <h3>Converted History</h3>
+        <button class="btn" id="addBtn" style="height: 24px; padding: 0 8px; font-size: 11px;">+ Add</button>
+      </div>
+      <div class="flist" id="flist"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL: Preview & Results -->
+  <div class="workspace-right">
+    
+    <!-- Empty state placeholder -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-state-icon">⚡</div>
+      <h2>Vectroid Converter</h2>
+      <p>Upload one or more SVG files to start. The generated VectorDrawable XML and live previews will render here in real-time.</p>
+    </div>
+
+    <!-- Results Panel (Hidden initially) -->
+    <div id="resultPanel" style="display: none;">
+      <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <h3 id="dTitle" style="color: var(--tx)">filename.xml</h3>
+          <span class="tag t-ok" id="dStatus">Converted</span>
+        </div>
+        <div class="card-body">
+          
+          <div class="meta-row">
+            <div class="meta-item"><strong>Paths:</strong> <span id="dPaths">—</span></div>
+            <div class="meta-item"><strong>Size:</strong> <span id="dSize">—</span></div>
+            <div class="meta-item"><strong>Viewport:</strong> <span id="dVP">—</span></div>
+          </div>
+
+          <div class="sec-label">Preview</div>
+          <div class="preview-block">
+            <div class="pbox bg-l" id="prevBox"></div>
+            <div class="pfooter">
+              <span class="pf-label">Background</span>
+              <button class="bgb on" data-bg="bg-l">Light</button>
+              <button class="bgb" data-bg="bg-g">Grid</button>
+            </div>
+          </div>
+
+          <div class="sec-label">XML Output</div>
+          <div class="xml-alert-card">
+            <div class="xmlh">
+              <span class="xmlh-t">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                VectorDrawable XML
+              </span>
+              <div style="display: flex; gap: 8px;">
+                <button class="xml-act" id="xmlCopy">Copy Code</button>
+                <button class="xml-act" id="xmlDl">Download XML</button>
+              </div>
+            </div>
+            <div class="xml-body">
+              <pre class="xcode" id="xmlCode"></pre>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<input type="file" id="fi" accept=".svg,image/svg+xml" multiple>
+
+<script>
+'use strict';
+/* ════ COLORS & STYLE RESOLUTION ════════════════════════════════════ */
+function h2(n){return Math.max(0,Math.min(255,Math.round(n))).toString(16).padStart(2,'0')}
+
+// Parse any CSS color format (hex, rgb, rgba, hsl, named, etc.) using a canvas context
+function parseCssColor(colorStr) {
+  if (!colorStr || colorStr === 'none' || colorStr === 'transparent') return null;
+  const ctx = document.createElement('canvas').getContext('2d');
+  ctx.fillStyle = colorStr;
+  const resolved = ctx.fillStyle;
+  if (!resolved || resolved === 'none' || resolved === 'transparent') return null;
+  if (resolved.startsWith('#')) {
+    const r = parseInt(resolved.slice(1, 3), 16);
+    const g = parseInt(resolved.slice(3, 5), 16);
+    const b = parseInt(resolved.slice(5, 7), 16);
+    return [r, g, b, 1];
+  }
+  const m = resolved.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+)\s*)?\)$/);
+  if (m) {
+    return [
+      parseInt(m[1]),
+      parseInt(m[2]),
+      parseInt(m[3]),
+      m[4] !== undefined ? parseFloat(m[4]) : 1
+    ];
+  }
+  return [0, 0, 0, 1];
+}
+
+function colorToAndroidHex(rgba, opacityMultiplier = 1) {
+  if (!rgba) return '#00000000';
+  const [r, g, b, a] = rgba;
+  const finalAlpha = a * opacityMultiplier;
+  if (finalAlpha >= 1) {
+    return '#' + h2(r) + h2(g) + h2(b);
+  }
+  return '#' + h2(finalAlpha * 255) + h2(r) + h2(g) + h2(b);
+}
+
+/* ════ SHAPE → PATH ══════════════════════════════════════════════════ */
+function s2p(el){
+  const t=(el.localName||el.tagName||'').toLowerCase().replace(/^svg:/,'');
+  switch(t){
+    case 'path': return el.getAttribute('d');
+    case 'rect':{
+      const x=+el.getAttribute('x')||0,y=+el.getAttribute('y')||0,w=+el.getAttribute('width')||0,h=+el.getAttribute('height')||0;
+      if(!w||!h) return null;
+      const ra=el.getAttribute('rx'),rb=el.getAttribute('ry');
+      let rx=ra!=null?+ra:(rb!=null?+rb:0),ry=rb!=null?+rb:rx;
+      rx=Math.min(rx,w/2);ry=Math.min(ry,h/2);
+      if(!rx&&!ry) return `M${x},${y}H${x+w}V${y+h}H${x}Z`;
+      return `M${x+rx},${y}H${x+w-rx}A${rx},${ry},0,0,1,${x+w},${y+ry}V${y+h-ry}A${rx},${ry},0,0,1,${x+w-rx},${y+h}H${x+rx}A${rx},${ry},0,0,1,${x},${y+h-ry}V${y+ry}A${rx},${ry},0,0,1,${x+rx},${y}Z`;
+    }
+    case 'circle':{const cx=+el.getAttribute('cx')||0,cy=+el.getAttribute('cy')||0,r=+el.getAttribute('r')||0;if(!r)return null;return `M${cx-r},${cy}A${r},${r},0,1,0,${cx+r},${cy}A${r},${r},0,1,0,${cx-r},${cy}Z`;}
+    case 'ellipse':{const cx=+el.getAttribute('cx')||0,cy=+el.getAttribute('cy')||0,rx=+el.getAttribute('rx')||0,ry=+el.getAttribute('ry')||0;if(!rx||!ry)return null;return `M${cx-rx},${cy}A${rx},${ry},0,1,0,${cx+rx},${cy}A${rx},${ry},0,1,0,${cx-rx},${cy}Z`;}
+    case 'line':return `M${el.getAttribute('x1')||0},${el.getAttribute('y1')||0}L${el.getAttribute('x2')||0},${el.getAttribute('y2')||0}`;
+    case 'polygon':case 'polyline':{const pts=(el.getAttribute('points')||'').trim().split(/[\s,]+/).filter(Boolean).map(Number);if(pts.length<4)return null;let d=`M${pts[0]},${pts[1]}`;for(let i=2;i<pts.length-1;i+=2)d+=`L${pts[i]},${pts[i+1]}`;return t==='polygon'?d+'Z':d;}
+    default:return null;
+  }
+}
+
+/* ════ COLLECT PATHS ═════════════════════════════════════════════════ */
+const SKIP=new Set(['defs','symbol','metadata','title','desc','style','script','lineargradient','radialgradient','pattern','clippath','mask','filter','marker','use','image','text','tspan','textpath','switch']);
+function collect(el,opts,out){
+  const t=(el.localName||el.tagName||'').toLowerCase().replace(/^svg:/,'');
+  if(SKIP.has(t)) return;
+  const style = window.getComputedStyle(el);
+  if(style.display==='none'||style.visibility==='hidden') return;
+
+  if(['g','svg','a','marker'].includes(t)){
+    for(const c of el.children) collect(c,opts,out);
+    return;
+  }
+
+  const pd=s2p(el);
+  if(!pd||!pd.trim()) return;
+
+  const fcRgba = parseCssColor(style.fill);
+  const scRgba = parseCssColor(style.stroke);
+  const fo = parseFloat(style.fillOpacity || 1);
+  const so = parseFloat(style.strokeOpacity || 1);
+  const op = parseFloat(style.opacity || 1);
+
+  const fc = fcRgba ? '#' + h2(fcRgba[0]) + h2(fcRgba[1]) + h2(fcRgba[2]) : null;
+  const fa = fcRgba ? parseFloat((fcRgba[3] * fo * op).toFixed(3)) : 1;
+
+  const sc = scRgba ? '#' + h2(scRgba[0]) + h2(scRgba[1]) + h2(scRgba[2]) : null;
+  const sa = scRgba ? parseFloat((scRgba[3] * so * op).toFixed(3)) : 1;
+
+  let sw2 = parseFloat(style.strokeWidth) || 0;
+  if(style.stroke !== 'none' && sc && !sw2) {
+    sw2 = 1;
+  }
+
+  let ft = 'nonZero';
+  if ((style.fillRule || '').trim().toLowerCase() === 'evenodd') {
+    ft = opts.fix ? 'nonZero' : 'evenOdd';
+  }
+
+  const slc = style.strokeLinecap || 'butt';
+  const slj = style.strokeLinejoin || 'miter';
+
+  out.push({pd,fc,fa,sc,sa,sw:sw2,ft,slc,slj});
+}
+
+/* ════ CONVERT ═══════════════════════════════════════════════════════ */
+function convert(svgText,opts){
+  const wrapper = document.createElement('div');
+  wrapper.style.position = 'fixed';
+  wrapper.style.left = '-9999px';
+  wrapper.style.top = '-9999px';
+  wrapper.style.width = '1px';
+  wrapper.style.height = '1px';
+  wrapper.style.overflow = 'hidden';
+  wrapper.innerHTML = svgText;
+  document.body.appendChild(wrapper);
+
+  const svg = wrapper.querySelector('svg');
+  if(!svg) {
+    document.body.removeChild(wrapper);
+    throw new Error('Invalid SVG file.');
+  }
+
+  let vbw=0,vbh=0;
+  const vb=svg.getAttribute('viewBox');if(vb){const p=vb.trim().split(/[\s,]+/).map(Number);vbw=p[2]||0;vbh=p[3]||0;}
+  const sw=parseFloat(svg.getAttribute('width'))||vbw||24,sh=parseFloat(svg.getAttribute('height'))||vbh||24;
+  if(!vbw)vbw=sw;if(!vbh)vbh=sh;
+  const outW=opts.w==='auto'||!opts.w?Math.round(sw):(parseFloat(opts.w)||Math.round(sw));
+  const outH=opts.h==='auto'||!opts.h?Math.round(sh):(parseFloat(opts.h)||Math.round(sh));
+  
+  const paths=[];
+  collect(svg,{fix:opts.fix},paths);
+
+  document.body.removeChild(wrapper);
+
+  let xml=`<?xml version="1.0" encoding="utf-8"?>\n<vector xmlns:android="http://schemas.android.com/apk/res/android"\n    android:width="${outW}dp"\n    android:height="${outH}dp"\n    android:viewportWidth="${vbw}"\n    android:viewportHeight="${vbh}">\n`;
+  for(const p of paths){
+    const attrs = [];
+    attrs.push(`android:pathData="${xe(p.pd)}"`);
+    attrs.push(`android:fillColor="${p.fc||'#00000000'}"`);
+    if(p.fa<1) attrs.push(`android:fillAlpha="${p.fa}"`);
+    if(p.sc&&p.sw>0){
+      attrs.push(`android:strokeColor="${p.sc}"`);
+      attrs.push(`android:strokeWidth="${p.sw}"`);
+      if(p.sa<1) attrs.push(`android:strokeAlpha="${p.sa}"`);
+      if(p.slc!=='butt') attrs.push(`android:strokeLineCap="${p.slc}"`);
+      if(p.slj!=='miter') attrs.push(`android:strokeLineJoin="${p.slj}"`);
+    }
+    if(p.ft!=='nonZero') attrs.push(`android:fillType="${p.ft}"`);
+    xml+=`    <path\n        ` + attrs.join('\n        ') + ` />\n`;
+  }
+  xml+=`</vector>`;
+  return{xml,n:paths.length,w:outW,h:outH,vw:vbw,vh:vbh};
+}
+
+/* ════ VD → PREVIEW SVG ══════════════════════════════════════════════ */
+function getVdAttr(el, name) {
+  const ln = name.toLowerCase();
+  for (const attr of el.attributes) {
+    const aln = attr.localName.toLowerCase();
+    const an = attr.name.toLowerCase();
+    if (aln === ln || an === 'android:' + ln || an === ln) {
+      return attr.value;
+    }
+  }
+  return null;
+}
+
+function androidHexToWebColor(colorStr) {
+  if (!colorStr) return 'none';
+  colorStr = colorStr.trim();
+  if (colorStr === 'none' || colorStr === 'transparent' || colorStr === '#00000000') return 'none';
+  if (colorStr.startsWith('#') && colorStr.length === 9) {
+    // Android #AARRGGBB -> CSS rgba(r,g,b,a)
+    const a = parseInt(colorStr.slice(1, 3), 16) / 255;
+    const r = parseInt(colorStr.slice(3, 5), 16);
+    const g = parseInt(colorStr.slice(5, 7), 16);
+    const b = parseInt(colorStr.slice(7, 9), 16);
+    return `rgba(${r}, ${g}, ${b}, ${a.toFixed(3)})`;
+  }
+  return colorStr;
+}
+
+function vd2svg(vdXml){
+  try{
+    const doc=new DOMParser().parseFromString(vdXml,'application/xml');
+    const v=doc.documentElement;if(!v||v.tagName==='parsererror') return null;
+    const vw=parseFloat(getVdAttr(v, 'viewportWidth'))||24,vh=parseFloat(getVdAttr(v, 'viewportHeight'))||24;
+    let s='';
+    function walk(el){
+      for(const c of el.children){
+        const tag = (c.localName || c.tagName || '').toLowerCase();
+        if(tag==='path'){
+          const d=getVdAttr(c, 'pathData')||'';
+          const fill=androidHexToWebColor(getVdAttr(c, 'fillColor') || '#000000');
+          const fillAlpha=getVdAttr(c, 'fillAlpha')||'1';
+          const stroke=androidHexToWebColor(getVdAttr(c, 'strokeColor') || 'none');
+          const strokeAlpha=getVdAttr(c, 'strokeAlpha')||'1';
+          const sw=getVdAttr(c, 'strokeWidth')||'0';
+          const slc=getVdAttr(c, 'strokeLineCap')||'butt';
+          const slj=getVdAttr(c, 'strokeLineJoin')||'miter';
+          const ft=getVdAttr(c, 'fillType');
+          const fr=ft==='evenOdd'?'evenodd':'nonzero';
+          s+=`<path d="${he(d)}" fill="${he(fill)}" fill-opacity="${fillAlpha}"`;
+          if(stroke!=='none'&&parseFloat(sw)>0){
+            s+=` stroke="${he(stroke)}" stroke-width="${sw}" stroke-opacity="${strokeAlpha}"`;
+            if(slc!=='butt')s+=` stroke-linecap="${slc}"`;
+            if(slj!=='miter')s+=` stroke-linejoin="${slj}"`;
+          }
+          s+=` fill-rule="${fr}"/>`;
+        }else if(tag==='group'){
+          walk(c);
+        }
+      }
+    }
+    walk(v);
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${vw} ${vh}" style="max-height:115px;max-width:100%;display:block">${s}</svg>`;
+  }catch{return null;}
+}
+
+/* ════ UTILS ═════════════════════════════════════════════════════════ */
+function xe(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function he(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function hl(xml){return he(xml).replace(/^(&lt;\?[^?]*\?&gt;)/m,'<span class="xd">$1</span>').replace(/(&lt;\/?[\w:-]+)/g,'<span class="xt">$1</span>').replace(/(&gt;)/g,'<span class="xt">$1</span>').replace(/([\w:]+)(?=\s*=)/g,'<span class="xa">$1</span>').replace(/="([^"]*)"/g,'="<span class="xv">$1</span>"');}
+function now(){const d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
+
+/* ════ STATE ═════════════════════════════════════════════════════════ */
+let store=[],active=-1;
+function opts(){return{w:document.getElementById('optW').value.trim().toLowerCase(),h:document.getElementById('optH').value.trim().toLowerCase(),fix:document.getElementById('optFix').checked};}
+
+/* ════ PROCESS ═══════════════════════════════════════════════════════ */
+async function run(files){
+  const list=Array.from(files).filter(f=>f.name.match(/\.svg$/i)||f.type==='image/svg+xml');
+  if(!list.length){alert('Please select .svg files.');return;}
+  const o=opts();
+  for(const f of list){
+    try{
+      const res=convert(await f.text(),o);
+      store.push({ok:true,name:f.name.replace(/\.svg$/i,'.xml'),xml:res.xml,svg:vd2svg(res.xml),n:res.n,w:res.w,h:res.h,vw:res.vw,vh:res.vh,t:now()});
+    }catch(e){
+      store.push({ok:false,name:f.name,err:e.message,t:now()});
+    }
+  }
+  renderList();
+  selectItem(store.length-1);
+}
+
+/* ════ RENDER LIST ════════════════════════════════════════════════════ */
+function renderList(){
+  const box=document.getElementById('flist');
+  const histCard=document.getElementById('historyCard');
+  if(!store.length){
+    histCard.style.display='none';
+    return;
+  }
+  histCard.style.display='block';
+  box.innerHTML='';
+  store.forEach((r,i)=>{
+    const el=document.createElement('div');
+    el.className='fi'+(i===active?' sel':'');
+    el.innerHTML=`<div class="fi-dot${r.ok?'':' er'}"></div><div class="fi-body"><div class="fi-name">${he(r.name)}</div><div class="fi-sub">${he(r.ok?`${r.n} path${r.n!==1?'s':''} · ${r.w}×${r.h}dp`:r.err.slice(0,32))}</div></div><div class="fi-time">${r.t}</div>`;
+    el.onclick=()=>selectItem(i);
+    box.appendChild(el);
+  });
+}
+
+/* ════ SELECT ════════════════════════════════════════════════════════ */
+function selectItem(i){
+  active=i;
+  renderList();
+  const r=store[i];
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('resultPanel').style.display='block';
+  document.getElementById('dTitle').textContent=r.name;
+  const st=document.getElementById('dStatus');
+  if(r.ok){
+    st.textContent='Converted';st.className='tag t-ok';
+    document.getElementById('dPaths').textContent=`${r.n} path${r.n!==1?'s':''}`;
+    document.getElementById('dSize').textContent=`${r.w}×${r.h}dp`;
+    document.getElementById('dVP').textContent=`${r.vw}×${r.vh}`;
+    document.getElementById('prevBox').innerHTML=r.svg||'<span style="color:var(--tx3);font-size:.72rem">No preview</span>';
+    document.getElementById('xmlCode').innerHTML=hl(r.xml);
+  }else{
+    st.textContent='Error';st.className='tag t-er';
+    document.getElementById('dPaths').textContent='—';
+    document.getElementById('dSize').textContent='—';
+    document.getElementById('dVP').textContent='—';
+    document.getElementById('prevBox').innerHTML=`<span style="color:#f87171;font-size:.78rem">${he(r.err)}</span>`;
+    document.getElementById('xmlCode').textContent='';
+  }
+}
+
+/* ════ PREVIEW BG ════════════════════════════════════════════════════ */
+document.querySelector('.pfooter').addEventListener('click',e=>{
+  const btn=e.target.closest('.bgb');if(!btn) return;
+  document.getElementById('prevBox').className='pbox '+btn.dataset.bg;
+  document.querySelectorAll('.bgb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+});
+
+/* ════ ACTIONS ═══════════════════════════════════════════════════════ */
+document.getElementById('xmlCopy').onclick=()=>{
+  if(active<0||!store[active].ok) return;
+  navigator.clipboard.writeText(store[active].xml).then(()=>{
+    const b=document.getElementById('xmlCopy');const t=b.textContent;b.textContent='Copied!';setTimeout(()=>b.textContent=t,2000);
+  });
+};
+document.getElementById('xmlDl').onclick=()=>dl(active);
+function dl(i){
+  if(i<0||!store[i].ok) return;
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([store[i].xml],{type:'application/xml'}));a.download=store[i].name;a.click();
+}
+
+// Theme Toggle Logic
+const themeBtn = document.getElementById('themeToggle');
+const sunIcon = themeBtn.querySelector('.sun-icon');
+const moonIcon = themeBtn.querySelector('.moon-icon');
+
+function updateThemeIcons(isDark) {
+  if (isDark) {
+    sunIcon.style.display = 'block';
+    moonIcon.style.display = 'none';
+  } else {
+    sunIcon.style.display = 'none';
+    moonIcon.style.display = 'block';
+  }
+}
+
+// Load saved theme
+const savedTheme = localStorage.getItem('theme') || 'dark';
+if (savedTheme === 'light') {
+  document.body.classList.remove('theme-dark');
+  document.body.classList.add('theme-light');
+  updateThemeIcons(false);
+} else {
+  document.body.classList.remove('theme-light');
+  document.body.classList.add('theme-dark');
+  updateThemeIcons(true);
+}
+
+themeBtn.onclick = () => {
+  let isDark = document.body.classList.contains('theme-dark');
+  if (isDark) {
+    document.body.classList.remove('theme-dark');
+    document.body.classList.add('theme-light');
+    localStorage.setItem('theme', 'light');
+    updateThemeIcons(false);
+  } else {
+    document.body.classList.remove('theme-light');
+    document.body.classList.add('theme-dark');
+    localStorage.setItem('theme', 'dark');
+    updateThemeIcons(true);
+  }
+};
+
+/* ════ FILE INPUT / DRAG DROP ════════════════════════════════════════ */
+const fi=document.getElementById('fi');
+fi.onchange=()=>{if(fi.files.length)run(fi.files);fi.value='';};
+
+function openFile(){fi.click();}
+document.getElementById('addBtn').onclick=openFile;
+document.getElementById('browseBtn').onclick=openFile;
+
+// Drag & drop on the whole right area
+const rightPanel = document.querySelector('.workspace-right');
+window.addEventListener('dragover',e=>{e.preventDefault();document.getElementById('dropArea').classList.add('over');});
+window.addEventListener('dragleave',e=>{if(e.target===document.documentElement)document.getElementById('dropArea').classList.remove('over');});
+window.addEventListener('drop',e=>{e.preventDefault();document.getElementById('dropArea').classList.remove('over');if(e.dataTransfer.files.length)run(e.dataTransfer.files);});
+
+// Init
+renderList();
+</script>
+</body>
+</html>
