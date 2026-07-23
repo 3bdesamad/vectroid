@@ -17,16 +17,34 @@
   --panel:#16171a;
   --sf:#1e1f22;
   --sf2:#2b2c30;
-  --bd:rgba(255,255,255,0.06);
-  --bd2:rgba(255,255,255,0.12);
+  --bd:rgba(255,255,255,0.08);
+  --bd2:rgba(255,255,255,0.15);
   --ac:#1c90db;
   --ac2:#2fa2e8;
-  --tx:#ececf0;
-  --tx2:rgba(240,240,248,.62);
-  --tx3:rgba(240,240,248,.35);
+  --tx:#ffffff;
+  --tx2:rgba(255,255,255,0.72);
+  --tx3:rgba(255,255,255,0.45);
   --ok:#22c55e;
   --er:#ef4444;
   --r:6px;
+  --sh:0 4px 24px rgba(0,0,0,.45);
+}
+
+body.theme-dark {
+  --bg:#0c0d0f;
+  --sb:#111215;
+  --panel:#16171a;
+  --sf:#1e1f22;
+  --sf2:#2b2c30;
+  --bd:rgba(255,255,255,0.08);
+  --bd2:rgba(255,255,255,0.15);
+  --ac:#1c90db;
+  --ac2:#2fa2e8;
+  --tx:#ffffff;
+  --tx2:rgba(255,255,255,0.72);
+  --tx3:rgba(255,255,255,0.45);
+  --ok:#22c55e;
+  --er:#ef4444;
   --sh:0 4px 24px rgba(0,0,0,.45);
 }
 
@@ -41,10 +59,10 @@ body.theme-light {
   --bd2:#dee2e6;
   --ac:#1c90db;
   --ac2:#2fa2e8;
-  --tx:#1a1d20;
-  --tx2:#495057;
-  --tx3:#adb5bd;
-  --ok:#198754;
+  --tx:#0f172a;
+  --tx2:#334155;
+  --tx3:#64748b;
+  --ok:#16a34a;
   --er:#dc3545;
   --sh:0 1px 3px 0 rgba(0,0,0,0.05), 0 1px 2px -1px rgba(0,0,0,0.05);
 }
@@ -58,7 +76,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 .logo-group{display:flex;align-items:center;gap:10px}
 .logo{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,var(--ac),#00b4d8);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(28,144,219,0.25);padding:5px}
 .logo-img{width:100%;height:100%;display:block;filter:brightness(0) invert(1)}
-.logo-text{font-size:0.95rem;font-weight:700;letter-spacing:-0.01em;color:var(--tx)}
+.logo-text{font-size:1.02rem;font-weight:700;letter-spacing:-0.02em;color:var(--tx);transition:color .2s}
 .logo-badge{font-size:0.68rem;font-weight:700;background:rgba(28,144,219,0.12);color:var(--ac);padding:2px 6px;border-radius:6px;}
 
 .header-actions{display:flex;align-items:center;gap:12px}
@@ -121,7 +139,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 /* Empty State Placeholder */
 .empty-state{text-align:center;padding:5rem 2rem;max-width:520px;margin:auto;display:flex;flex-direction:column;align-items:center;gap:1rem}
 .empty-state-icon{font-size:3.5rem;line-height:1;margin-bottom:0.5rem;opacity:0.8;color:var(--ac)}
-.empty-state h2{font-size:1.35rem;font-weight:700;color:var(--tx);letter-spacing:-0.02em}
+.empty-state h2{font-size:1.45rem;font-weight:700;color:var(--tx);letter-spacing:-0.03em;transition:color .2s}
 .empty-state p{font-size:0.88rem;color:var(--tx2);line-height:1.6}
 
 /* Details and Output */
@@ -186,7 +204,7 @@ body.theme-dark .xd{color:#fbbf24}
       <img src="assets/logo.svg" alt="logo" class="logo-img">
     </div>
     <span class="logo-text">Vectroid</span>
-    <span class="logo-badge">v1.0.0</span>
+    <span class="logo-badge">v1.0.1</span>
   </div>
   <div class="header-actions">
     <button class="header-btn" id="themeToggle" title="Toggle Theme">
