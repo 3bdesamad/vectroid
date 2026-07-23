@@ -21,7 +21,7 @@
   --bd2:rgba(255,255,255,0.12);
   --ac:#1c90db;
   --ac2:#2fa2e8;
-  --tx:#000000;
+  --tx:#ececf0;
   --tx2:rgba(240,240,248,.62);
   --tx3:rgba(240,240,248,.35);
   --ok:#22c55e;
@@ -86,10 +86,11 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 .drop-s{font-size:0.8rem;color:var(--tx3);margin-bottom:0.9rem;line-height:1.4}
 
 /* Buttons */
-.btn{height:36px;padding:0 1.2rem;border-radius:6px;border:1px solid var(--bd2);background:var(--sf);color:var(--tx2);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all .14s;font-family:inherit;font-size:0.82rem;font-weight:600;box-shadow:var(--sh);text-decoration:none}
+.btn{height:36px;padding:0 1.2rem;border-radius:6px;border:1px solid var(--bd2);background:var(--sf);color:var(--tx2);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all .14s;font-family:inherit;font-size:0.82rem;font-weight:600;box-shadow:var(--sh);text-decoration:none;white-space:nowrap;line-height:1}
 .btn:hover{background:var(--sf2);color:var(--tx);border-color:var(--bd2)}
 .btn-primary{background:var(--ac);border-color:var(--ac);color:#fff;box-shadow:0 2px 8px rgba(28,144,219,0.2)}
 .btn-primary:hover{background:var(--ac2);border-color:var(--ac2);color:#fff}
+.btn-sm{height:28px;padding:0 10px;font-size:0.73rem;font-weight:600;gap:5px;flex-shrink:0}
 
 /* Settings Form */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -113,6 +114,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 .fi-name{font-size:.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx)}
 .fi-sub{font-size:.7rem;color:var(--tx3);margin-top:1px}
 .fi-time{font-size:.7rem;color:var(--tx3);flex-shrink:0}
+.fi-del{display:none;background:transparent;border:none;color:var(--tx3);font-size:1.1rem;line-height:1;padding:0 4px;cursor:pointer;border-radius:4px;transition:all .12s;margin-left:4px}
+.fi:hover .fi-del{display:block}
+.fi-del:hover{color:var(--er);background:rgba(239,68,68,.12)}
 
 /* Empty State Placeholder */
 .empty-state{text-align:center;padding:5rem 2rem;max-width:520px;margin:auto;display:flex;flex-direction:column;align-items:center;gap:1rem}
@@ -148,31 +152,27 @@ body.theme-dark .bgb.on{background:rgba(28,144,219,.12);border-color:rgba(28,144
 
 /* XML Output Card (Notion/Linear motivated alert style) */
 .xml-alert-card {
-  background: rgba(28, 144, 219, 0.04);
-  border: 1px solid rgba(28, 144, 219, 0.16);
+  background: var(--panel);
+  border: 1px solid var(--bd);
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 1.8rem;
+  box-shadow: var(--sh);
 }
-body.theme-dark .xml-alert-card {
-  background: rgba(28, 144, 219, 0.06);
-  border: 1px solid rgba(28, 144, 219, 0.22);
-}
-.xmlh{display:flex;align-items:center;padding:.6rem 1rem;border-bottom:1px solid rgba(28, 144, 219, 0.16);background:rgba(28, 144, 219, 0.03);justify-content:space-between}
-.xmlh-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ac);display:flex;align-items:center;gap:6px;}
-.xml-act{padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;border:1px solid rgba(28, 144, 219, 0.25);background:var(--sf);color:var(--ac);cursor:pointer;transition:all .12s;font-family:inherit;box-shadow:var(--sh)}
-.xml-act:hover{background:rgba(28, 144, 219, 0.08);color:var(--ac2)}
-.xml-body{overflow:auto;max-height:360px}
-pre.xcode{padding:1.1rem;font-family:'JetBrains Mono',Consolas,monospace;font-size:.8rem;line-height:1.85;white-space:pre;color:var(--tx2);margin:0}
-body.theme-dark pre.xcode{color:rgba(255,255,255,.62)}
-.xt{color:#1c90db}
-body.theme-dark .xt{color:#7dd3fc}
-.xa{color:#2fa2e8}
-body.theme-dark .xa{color:#a5b4fc}
-.xv{color:#16a34a}
-body.theme-dark .xv{color:#86efac}
-.xd{color:#b7791f}
-body.theme-dark .xd{color:#f9a8d4}
+.xmlh{display:flex;align-items:center;padding:.65rem 1rem;border-bottom:1px solid var(--bd);background:var(--sf);justify-content:space-between}
+.xmlh-t{font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ac);display:flex;align-items:center;gap:6px;}
+.xml-act{padding:.35rem .85rem;border-radius:6px;font-size:.74rem;font-weight:600;border:1px solid var(--bd2);background:var(--sf);color:var(--tx2);cursor:pointer;transition:all .14s;font-family:inherit;box-shadow:var(--sh)}
+.xml-act:hover{background:var(--sf2);border-color:var(--ac);color:var(--ac)}
+.xml-body{overflow:auto;max-height:380px;background:var(--bg)}
+pre.xcode{padding:1.25rem;font-family:'JetBrains Mono',Consolas,monospace;font-size:.82rem;line-height:1.7;white-space:pre;color:var(--tx);margin:0}
+.xt{color:#be185d;font-weight:600}
+body.theme-dark .xt{color:#f472b6}
+.xa{color:#4d7c0f;font-weight:500}
+body.theme-dark .xa{color:#a3e635}
+.xv{color:#1d4ed8}
+body.theme-dark .xv{color:#60a5fa}
+.xd{color:#b45309}
+body.theme-dark .xd{color:#fbbf24}
 
 #fi{display:none}
 </style>
@@ -243,9 +243,12 @@ body.theme-dark .xd{color:#f9a8d4}
     <div class="card" id="historyCard" style="display: none;">
       <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
         <h3>Converted History</h3>
-        <button class="btn" id="addBtn" style="height: 24px; padding: 0 8px; font-size: 11px;">+ Add</button>
+        <button class="btn btn-sm" id="addBtn" title="Add SVG files">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Add SVG</span>
+        </button>
       </div>
-      <div class="flist" id="flist"></div>
+      <div class="flist" id="flist" style="max-height: 220px; overflow-y: auto;"></div>
     </div>
   </div>
 
@@ -262,9 +265,21 @@ body.theme-dark .xd{color:#f9a8d4}
     <!-- Results Panel (Hidden initially) -->
     <div id="resultPanel" style="display: none;">
       <div class="card">
-        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-          <h3 id="dTitle" style="color: var(--tx)">filename.xml</h3>
-          <span class="tag t-ok" id="dStatus">Converted</span>
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <h3 id="dTitle" style="color: var(--tx); font-size: 0.95rem; font-weight: 700;">filename.xml</h3>
+            <span class="tag t-ok" id="dStatus">Converted</span>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button class="btn btn-sm" id="dlZipBtn" title="Download all converted XML files as ZIP archive" style="color: var(--ac); border-color: rgba(28,144,219,0.35); background: rgba(28,144,219,0.06);">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Download All (.zip)</span>
+            </button>
+            <button class="btn btn-sm" id="clearBtn" title="Clear all converted history" style="color: var(--er); border-color: rgba(239,68,68,0.25); background: rgba(239,68,68,0.05);">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              <span>Clear All</span>
+            </button>
+          </div>
         </div>
         <div class="card-body">
           
@@ -425,6 +440,7 @@ function convert(svgText,opts){
   wrapper.style.width = '1px';
   wrapper.style.height = '1px';
   wrapper.style.overflow = 'hidden';
+  wrapper.style.color = '#000000';
   wrapper.innerHTML = svgText;
   document.body.appendChild(wrapper);
 
@@ -446,12 +462,14 @@ function convert(svgText,opts){
 
   document.body.removeChild(wrapper);
 
-  let xml=`<?xml version="1.0" encoding="utf-8"?>\n<vector xmlns:android="http://schemas.android.com/apk/res/android"\n    android:width="${outW}dp"\n    android:height="${outH}dp"\n    android:viewportWidth="${vbw}"\n    android:viewportHeight="${vbh}">\n`;
+  let xml=`<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"\n    android:viewportWidth="${vbw}"\n    android:viewportHeight="${vbh}"\n    android:width="${outW}dp"\n    android:height="${outH}dp">\n`;
   for(const p of paths){
     const attrs = [];
     attrs.push(`android:pathData="${xe(p.pd)}"`);
-    attrs.push(`android:fillColor="${p.fc||'#00000000'}"`);
-    if(p.fa<1) attrs.push(`android:fillAlpha="${p.fa}"`);
+    if(p.fc && p.fc !== '#00000000' && p.fa > 0){
+      attrs.push(`android:fillColor="${p.fc}"`);
+      if(p.fa<1) attrs.push(`android:fillAlpha="${p.fa}"`);
+    }
     if(p.sc&&p.sw>0){
       attrs.push(`android:strokeColor="${p.sc}"`);
       attrs.push(`android:strokeWidth="${p.sw}"`);
@@ -505,7 +523,8 @@ function vd2svg(vdXml){
         const tag = (c.localName || c.tagName || '').toLowerCase();
         if(tag==='path'){
           const d=getVdAttr(c, 'pathData')||'';
-          const fill=androidHexToWebColor(getVdAttr(c, 'fillColor') || '#000000');
+          const fillAttr=getVdAttr(c, 'fillColor');
+          const fill=fillAttr ? androidHexToWebColor(fillAttr) : 'none';
           const fillAlpha=getVdAttr(c, 'fillAlpha')||'1';
           const stroke=androidHexToWebColor(getVdAttr(c, 'strokeColor') || 'none');
           const strokeAlpha=getVdAttr(c, 'strokeAlpha')||'1';
@@ -534,7 +553,17 @@ function vd2svg(vdXml){
 /* ════ UTILS ═════════════════════════════════════════════════════════ */
 function xe(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function he(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function hl(xml){return he(xml).replace(/^(&lt;\?[^?]*\?&gt;)/m,'<span class="xd">$1</span>').replace(/(&lt;\/?[\w:-]+)/g,'<span class="xt">$1</span>').replace(/(&gt;)/g,'<span class="xt">$1</span>').replace(/([\w:]+)(?=\s*=)/g,'<span class="xa">$1</span>').replace(/="([^"]*)"/g,'="<span class="xv">$1</span>"');}
+function hl(xml){
+  if(!xml) return '';
+  const safe = String(xml).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return safe.replace(/(&lt;\/?[a-zA-Z0-9_:-]+)|(\/&gt;|&gt;)|([a-zA-Z0-9_:-]+)(?=\s*=)|("[\s\S]*?"|'[\s\S]*?')/g, function(match, tag, endTag, attr, val) {
+    if (tag) return `<span class="xt">${tag}</span>`;
+    if (endTag) return `<span class="xt">${endTag}</span>`;
+    if (attr) return `<span class="xa">${attr}</span>`;
+    if (val) return `<span class="xv">${val}</span>`;
+    return match;
+  });
+}
 function now(){const d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
 
 /* ════ STATE ═════════════════════════════════════════════════════════ */
@@ -564,6 +593,8 @@ function renderList(){
   const histCard=document.getElementById('historyCard');
   if(!store.length){
     histCard.style.display='none';
+    document.getElementById('resultPanel').style.display='none';
+    document.getElementById('emptyState').style.display='flex';
     return;
   }
   histCard.style.display='block';
@@ -571,10 +602,29 @@ function renderList(){
   store.forEach((r,i)=>{
     const el=document.createElement('div');
     el.className='fi'+(i===active?' sel':'');
-    el.innerHTML=`<div class="fi-dot${r.ok?'':' er'}"></div><div class="fi-body"><div class="fi-name">${he(r.name)}</div><div class="fi-sub">${he(r.ok?`${r.n} path${r.n!==1?'s':''} · ${r.w}×${r.h}dp`:r.err.slice(0,32))}</div></div><div class="fi-time">${r.t}</div>`;
-    el.onclick=()=>selectItem(i);
+    el.innerHTML=`<div class="fi-dot${r.ok?'':' er'}"></div><div class="fi-body"><div class="fi-name">${he(r.name)}</div><div class="fi-sub">${he(r.ok?`${r.n} path${r.n!==1?'s':''} · ${r.w}×${r.h}dp`:r.err.slice(0,32))}</div></div><div class="fi-time">${r.t}</div><button class="fi-del" title="Remove item">×</button>`;
+    el.onclick=(e)=>{
+      if(e.target.closest('.fi-del')) return;
+      selectItem(i);
+    };
+    const delBtn = el.querySelector('.fi-del');
+    delBtn.onclick=(e)=>{
+      e.stopPropagation();
+      removeHistoryItem(i);
+    };
     box.appendChild(el);
   });
+}
+
+function removeHistoryItem(i){
+  store.splice(i, 1);
+  if(!store.length){
+    active = -1;
+    renderList();
+  } else {
+    active = Math.min(active, store.length - 1);
+    selectItem(active);
+  }
 }
 
 /* ════ SELECT ════════════════════════════════════════════════════════ */
@@ -623,6 +673,130 @@ function dl(i){
   if(i<0||!store[i].ok) return;
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([store[i].xml],{type:'application/xml'}));a.download=store[i].name;a.click();
 }
+
+/* ════ ZIP GENERATION ═════════════════════════════════════════════════ */
+function createZip(files) {
+  const encoder = new TextEncoder();
+  const fileEntries = [];
+  let offset = 0;
+
+  const crcTable = new Uint32Array(256);
+  for (let i = 0; i < 256; i++) {
+    let c = i;
+    for (let k = 0; k < 8; k++) {
+      c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    }
+    crcTable[i] = c;
+  }
+
+  function crc32(bytes) {
+    let crc = 0xFFFFFFFF;
+    for (let i = 0; i < bytes.length; i++) {
+      crc = (crc >>> 8) ^ crcTable[(crc ^ bytes[i]) & 0xFF];
+    }
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+
+  const parts = [];
+
+  for (const f of files) {
+    const nameBytes = encoder.encode(f.name);
+    const contentBytes = encoder.encode(f.content);
+    const crc = crc32(contentBytes);
+    const size = contentBytes.length;
+    const headerOffset = offset;
+
+    const lh = new Uint8Array(30 + nameBytes.length);
+    const dv = new DataView(lh.buffer);
+    dv.setUint32(0, 0x04034b50, true);
+    dv.setUint16(4, 20, true);
+    dv.setUint16(6, 0, true);
+    dv.setUint16(8, 0, true);
+    dv.setUint16(10, 0, true);
+    dv.setUint16(12, 0, true);
+    dv.setUint32(14, crc, true);
+    dv.setUint32(18, size, true);
+    dv.setUint32(22, size, true);
+    dv.setUint16(26, nameBytes.length, true);
+    dv.setUint16(28, 0, true);
+    lh.set(nameBytes, 30);
+
+    parts.push(lh);
+    parts.push(contentBytes);
+
+    fileEntries.push({ nameBytes, crc, size, offset: headerOffset });
+    offset += lh.length + contentBytes.length;
+  }
+
+  const cdStart = offset;
+  let cdSize = 0;
+
+  for (const entry of fileEntries) {
+    const cdh = new Uint8Array(46 + entry.nameBytes.length);
+    const dv = new DataView(cdh.buffer);
+    dv.setUint32(0, 0x02014b50, true);
+    dv.setUint16(4, 20, true);
+    dv.setUint16(6, 20, true);
+    dv.setUint16(8, 0, true);
+    dv.setUint16(10, 0, true);
+    dv.setUint16(12, 0, true);
+    dv.setUint16(14, 0, true);
+    dv.setUint32(16, entry.crc, true);
+    dv.setUint32(20, entry.size, true);
+    dv.setUint32(24, entry.size, true);
+    dv.setUint16(28, entry.nameBytes.length, true);
+    dv.setUint16(30, 0, true);
+    dv.setUint16(32, 0, true);
+    dv.setUint16(34, 0, true);
+    dv.setUint16(36, 0, true);
+    dv.setUint32(38, 0, true);
+    dv.setUint32(42, entry.offset, true);
+    cdh.set(entry.nameBytes, 46);
+
+    parts.push(cdh);
+    offset += cdh.length;
+    cdSize += cdh.length;
+  }
+
+  const eocd = new Uint8Array(22);
+  const dv = new DataView(eocd.buffer);
+  dv.setUint32(0, 0x06054b50, true);
+  dv.setUint16(4, 0, true);
+  dv.setUint16(6, 0, true);
+  dv.setUint16(8, fileEntries.length, true);
+  dv.setUint16(10, fileEntries.length, true);
+  dv.setUint32(12, cdSize, true);
+  dv.setUint32(16, cdStart, true);
+  dv.setUint16(20, 0, true);
+  parts.push(eocd);
+
+  return new Blob(parts, { type: 'application/zip' });
+}
+
+document.getElementById('dlZipBtn').onclick = () => {
+  const validFiles = store.filter(r => r.ok).map(r => ({ name: r.name, content: r.xml }));
+  if (!validFiles.length) {
+    alert('No converted XML files available to download.');
+    return;
+  }
+  const zipBlob = createZip(validFiles);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(zipBlob);
+  a.download = 'vectroid_vectors.zip';
+  a.click();
+
+  const b = document.getElementById('dlZipBtn');
+  const oldHtml = b.innerHTML;
+  b.innerHTML = '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Downloaded!</span>';
+  setTimeout(() => b.innerHTML = oldHtml, 2000);
+};
+
+document.getElementById('clearBtn').onclick = () => {
+  if (!store.length) return;
+  store = [];
+  active = -1;
+  renderList();
+};
 
 // Theme Toggle Logic
 const themeBtn = document.getElementById('themeToggle');
