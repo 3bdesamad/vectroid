@@ -1,879 +1,1721 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vectroid — SVG to Vector Drawable Converter</title>
-<meta name="description" content="Convert SVG assets to clean, performance-optimized Android VectorDrawable XML files online. Runs entirely client-side in the browser for complete code privacy.">
-<meta name="keywords" content="svg to vector, svg to android xml, vectordrawable converter, android vector drawable, client-side svg converter">
-<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  /* Dark Theme by default (Linear/Notion inspired) */
-  --bg:#0c0d0f;
-  --sb:#111215;
-  --panel:#16171a;
-  --sf:#1e1f22;
-  --sf2:#2b2c30;
-  --bd:rgba(255,255,255,0.08);
-  --bd2:rgba(255,255,255,0.15);
-  --ac:#1c90db;
-  --ac2:#2fa2e8;
-  --tx:#ffffff;
-  --tx2:rgba(255,255,255,0.72);
-  --tx3:rgba(255,255,255,0.45);
-  --ok:#22c55e;
-  --er:#ef4444;
-  --r:6px;
-  --sh:0 4px 24px rgba(0,0,0,.45);
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vectroid — SVG to Vector Drawable Converter</title>
+  <meta name="description"
+    content="Convert SVG assets to clean, performance-optimized Android VectorDrawable XML files online. Runs entirely client-side in the browser for complete code privacy.">
+  <meta name="keywords"
+    content="svg to vector, svg to android xml, vectordrawable converter, android vector drawable, client-side svg converter">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
 
-body.theme-dark {
-  --bg:#0c0d0f;
-  --sb:#111215;
-  --panel:#16171a;
-  --sf:#1e1f22;
-  --sf2:#2b2c30;
-  --bd:rgba(255,255,255,0.08);
-  --bd2:rgba(255,255,255,0.15);
-  --ac:#1c90db;
-  --ac2:#2fa2e8;
-  --tx:#ffffff;
-  --tx2:rgba(255,255,255,0.72);
-  --tx3:rgba(255,255,255,0.45);
-  --ok:#22c55e;
-  --er:#ef4444;
-  --sh:0 4px 24px rgba(0,0,0,.45);
-}
+    :root {
+      /* Dark Theme by default (Linear/Notion inspired) */
+      --bg: #0c0d0f;
+      --sb: #111215;
+      --panel: #16171a;
+      --sf: #1e1f22;
+      --sf2: #2b2c30;
+      --bd: rgba(255, 255, 255, 0.08);
+      --bd2: rgba(255, 255, 255, 0.15);
+      --ac: #1c90db;
+      --ac2: #2fa2e8;
+      --tx: #ffffff;
+      --tx2: rgba(255, 255, 255, 0.72);
+      --tx3: rgba(255, 255, 255, 0.45);
+      --ok: #22c55e;
+      --er: #ef4444;
+      --r: 6px;
+      --sh: 0 4px 24px rgba(0, 0, 0, .45);
+    }
 
-body.theme-light {
-  /* Light Theme (Linear/Notion inspired) */
-  --bg:#fcfcfd;
-  --sb:#f4f4f6;
-  --panel:#f8f9fa;
-  --sf:#ffffff;
-  --sf2:#f1f3f5;
-  --bd:#e9ecef;
-  --bd2:#dee2e6;
-  --ac:#1c90db;
-  --ac2:#2fa2e8;
-  --tx:#0f172a;
-  --tx2:#334155;
-  --tx3:#64748b;
-  --ok:#16a34a;
-  --er:#dc3545;
-  --sh:0 1px 3px 0 rgba(0,0,0,0.05), 0 1px 2px -1px rgba(0,0,0,0.05);
-}
+    body.theme-dark {
+      --bg: #0c0d0f;
+      --sb: #111215;
+      --panel: #16171a;
+      --sf: #1e1f22;
+      --sf2: #2b2c30;
+      --bd: rgba(255, 255, 255, 0.08);
+      --bd2: rgba(255, 255, 255, 0.15);
+      --ac: #1c90db;
+      --ac2: #2fa2e8;
+      --tx: #ffffff;
+      --tx2: rgba(255, 255, 255, 0.72);
+      --tx3: rgba(255, 255, 255, 0.45);
+      --ok: #22c55e;
+      --er: #ef4444;
+      --sh: 0 4px 24px rgba(0, 0, 0, .45);
+    }
 
-html,body{height:100%;overflow:hidden}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column;height:100vh;transition:background-color .2s, color .2s}
-::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+    body.theme-light {
+      /* Light Theme (Linear/Notion inspired) */
+      --bg: #fcfcfd;
+      --sb: #f4f4f6;
+      --panel: #f8f9fa;
+      --sf: #ffffff;
+      --sf2: #f1f3f5;
+      --bd: #e9ecef;
+      --bd2: #dee2e6;
+      --ac: #1c90db;
+      --ac2: #2fa2e8;
+      --tx: #0f172a;
+      --tx2: #334155;
+      --tx3: #64748b;
+      --ok: #16a34a;
+      --er: #dc3545;
+      --sh: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+    }
 
-/* ── HEADER ──────────────────────────────────────────────── */
-.app-header{height:54px;background:var(--sb);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 1.5rem;justify-content:space-between;flex-shrink:0;transition:all .2s}
-.logo-group{display:flex;align-items:center;gap:10px}
-.logo{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,var(--ac),#00b4d8);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(28,144,219,0.25);padding:5px}
-.logo-img{width:100%;height:100%;display:block;filter:brightness(0) invert(1)}
-.logo-text{font-size:1.02rem;font-weight:700;letter-spacing:-0.02em;color:var(--tx);transition:color .2s}
-.logo-badge{font-size:0.68rem;font-weight:700;background:rgba(28,144,219,0.12);color:var(--ac);padding:2px 6px;border-radius:6px;}
+    html,
+    body {
+      height: 100%;
+      overflow: hidden
+    }
 
-.header-actions{display:flex;align-items:center;gap:12px}
-.header-btn{width:32px;height:32px;border-radius:6px;border:1px solid var(--bd2);background:var(--sf);color:var(--tx2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .14s;box-shadow:var(--sh)}
-.header-btn:hover{background:var(--sf2);color:var(--tx)}
-.header-link{font-size:0.8rem;font-weight:600;color:var(--tx2);text-decoration:none;transition:color .14s}
-.header-link:hover{color:var(--ac)}
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--tx);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      transition: background-color .2s, color .2s
+    }
 
-/* ── MAIN WORKSPACE ──────────────────────────────────────── */
-.workspace{flex:1;display:flex;overflow:hidden;}
-.workspace-left{width:360px;border-right:1px solid var(--bd);background:var(--panel);display:flex;flex-direction:column;padding:1.5rem;overflow-y:auto;gap:1.5rem;flex-shrink:0;transition:all .2s}
-.workspace-right{flex:1;display:flex;flex-direction:column;background:var(--bg);overflow-y:auto;padding:2rem;transition:all .2s}
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px
+    }
 
-/* Cards layout */
-.card{background:var(--sf);border:1px solid var(--bd);border-radius:6px;overflow:hidden;transition:all .2s}
-.card-header{padding:1rem 1.25rem;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:between;}
-.card-header h3{font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--tx3)}
-.card-body{padding:1.25rem}
+    ::-webkit-scrollbar-track {
+      background: transparent
+    }
 
-/* Drop Area */
-.drop-area{border:2px dashed var(--bd2);border-radius:6px;padding:2.2rem 1.5rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg)}
-.drop-area:hover,.drop-area.over{border-color:var(--ac);background:var(--sf2);transform:translateY(-1px)}
-.drop-ico{font-size:2.4rem;opacity:.65;margin-bottom:.5rem}
-.drop-t{font-size:0.95rem;font-weight:600;margin-bottom:.3rem;color:var(--tx)}
-.drop-s{font-size:0.8rem;color:var(--tx3);margin-bottom:0.9rem;line-height:1.4}
+    ::-webkit-scrollbar-thumb {
+      background: var(--bd2);
+      border-radius: 3px
+    }
 
-/* Buttons */
-.btn{height:36px;padding:0 1.2rem;border-radius:6px;border:1px solid var(--bd2);background:var(--sf);color:var(--tx2);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all .14s;font-family:inherit;font-size:0.82rem;font-weight:600;box-shadow:var(--sh);text-decoration:none;white-space:nowrap;line-height:1}
-.btn:hover{background:var(--sf2);color:var(--tx);border-color:var(--bd2)}
-.btn-primary{background:var(--ac);border-color:var(--ac);color:#fff;box-shadow:0 2px 8px rgba(28,144,219,0.2)}
-.btn-primary:hover{background:var(--ac2);border-color:var(--ac2);color:#fff}
-.btn-sm{height:28px;padding:0 10px;font-size:0.73rem;font-weight:600;gap:5px;flex-shrink:0}
+    /* ── HEADER ──────────────────────────────────────────────── */
+    .app-header {
+      height: 54px;
+      background: var(--sb);
+      border-bottom: 1px solid var(--bd);
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      justify-content: space-between;
+      flex-shrink: 0;
+      transition: all .2s
+    }
 
-/* Settings Form */
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form-group{display:flex;flex-direction:column;gap:5px}
-.form-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--tx3)}
-.form-input{background:var(--bg);border:1px solid var(--bd2);border-radius:6px;color:var(--tx);padding:.45rem .75rem;font-size:.85rem;font-family:'JetBrains Mono',monospace;outline:none;transition:border-color .15s;width:100%;height:38px}
-.form-input:focus{border-color:var(--ac)}
-.checkbox-container{display:flex;align-items:center;gap:.5rem;cursor:pointer;padding:.3rem 0}
-.checkbox-container input{accent-color:var(--ac);width:16px;height:16px;cursor:pointer}
-.checkbox-container span{font-size:0.82rem;color:var(--tx2);font-weight:500}
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
 
-/* Converted File List */
-.flist{display:flex;flex-direction:column;max-height:280px;overflow-y:auto;}
-.fi{display:flex;align-items:center;gap:.65rem;padding:.75rem 1rem;cursor:pointer;transition:background .1s;border-bottom:1px solid var(--bd)}
-.fi:last-child{border-bottom:none}
-.fi:hover{background:var(--sf2)}
-.fi.sel{background:rgba(28,144,219,.08)}
-.fi-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--ac)}
-.fi-dot.er{background:var(--er)}
-.fi-body{flex:1;min-width:0}
-.fi-name{font-size:.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx)}
-.fi-sub{font-size:.7rem;color:var(--tx3);margin-top:1px}
-.fi-time{font-size:.7rem;color:var(--tx3);flex-shrink:0}
-.fi-del{display:none;background:transparent;border:none;color:var(--tx3);font-size:1.1rem;line-height:1;padding:0 4px;cursor:pointer;border-radius:4px;transition:all .12s;margin-left:4px}
-.fi:hover .fi-del{display:block}
-.fi-del:hover{color:var(--er);background:rgba(239,68,68,.12)}
+    .logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--ac), #00b4d8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px rgba(28, 144, 219, 0.25);
+      padding: 5px
+    }
 
-/* Empty State Placeholder */
-.empty-state{text-align:center;padding:5rem 2rem;max-width:520px;margin:auto;display:flex;flex-direction:column;align-items:center;gap:1rem}
-.empty-state-icon{font-size:3.5rem;line-height:1;margin-bottom:0.5rem;opacity:0.8;color:var(--ac)}
-.empty-state h2{font-size:1.45rem;font-weight:700;color:var(--tx);letter-spacing:-0.03em;transition:color .2s}
-.empty-state p{font-size:0.88rem;color:var(--tx2);line-height:1.6}
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      filter: brightness(0) invert(1)
+    }
 
-/* Details and Output */
-.meta-row{display:flex;gap:1.5rem;font-size:0.85rem;background:var(--panel);padding:0.75rem 1rem;border-radius:6px;border:1px solid var(--bd);margin-bottom:1.5rem}
-.meta-item{color:var(--tx2)}
-.meta-item strong{color:var(--tx3);font-weight:500;margin-right:4px}
-.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;letter-spacing:.02em}
-.t-ok{background:rgba(34,197,94,.11);color:#22c55e;border:1px solid rgba(34,197,94,.2)}
-.t-er{background:rgba(239,68,68,.11);color:#ef4444;border:1px solid rgba(239,68,68,.2)}
+    .logo-text {
+      font-size: 1.02rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--tx);
+      transition: color .2s
+    }
 
-.sec-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);margin-bottom:.85rem;display:flex;align-items:center;gap:.6rem}
-.sec-label::after{content:'';flex:1;height:1px;background:var(--bd)}
+    .logo-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      background: rgba(28, 144, 219, 0.12);
+      color: var(--ac);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
 
-/* Preview Block */
-.preview-block{background:var(--sf);border:1px solid var(--bd);border-radius:6px;overflow:hidden;margin-bottom:1.8rem;box-shadow:var(--sh)}
-.pbox{display:flex;align-items:center;justify-content:center;padding:3rem;min-height:240px;transition:background .18s}
-.pbox.bg-d{background:#0e0e11}
-.pbox.bg-l{background:#f8f9fa;border:1px solid rgba(0,0,0,0.03)}
-.pbox.bg-g{background-color:#f1f3f5;background-image:linear-gradient(45deg,#e9ecef 25%,transparent 25%),linear-gradient(-45deg,#e9ecef 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e9ecef 75%),linear-gradient(-45deg,transparent 75%,#e9ecef 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0}
-body.theme-dark .pbox.bg-g{background-color:#161719;background-image:linear-gradient(45deg,#202124 25%,transparent 25%),linear-gradient(-45deg,#202124 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#202124 75%),linear-gradient(-45deg,transparent 75%,#202124 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0}
-.pbox svg{max-height:170px;max-width:100%;display:block}
-.pfooter{display:flex;align-items:center;gap:.45rem;padding:.6rem 1rem;border-top:1px solid var(--bd);background:var(--panel)}
-.pf-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tx3);margin-right:auto}
-.bgb{padding:.3rem .75rem;border-radius:6px;font-size:.72rem;font-weight:700;border:1px solid var(--bd2);background:var(--sf);color:var(--tx2);cursor:pointer;transition:all .12s;font-family:inherit;text-transform:uppercase;letter-spacing:.03em;box-shadow:var(--sh)}
-.bgb:hover{color:var(--tx);background:var(--sf2)}
-.bgb.on{background:rgba(28,144,219,.08);border-color:rgba(28,144,219,.3);color:var(--ac)}
-body.theme-dark .bgb.on{background:rgba(28,144,219,.12);border-color:rgba(28,144,219,.32);color:#1c90db}
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
 
-/* XML Output Card (Notion/Linear motivated alert style) */
-.xml-alert-card {
-  background: var(--panel);
-  border: 1px solid var(--bd);
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 1.8rem;
-  box-shadow: var(--sh);
-}
-.xmlh{display:flex;align-items:center;padding:.65rem 1rem;border-bottom:1px solid var(--bd);background:var(--sf);justify-content:space-between}
-.xmlh-t{font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ac);display:flex;align-items:center;gap:6px;}
-.xml-act{padding:.35rem .85rem;border-radius:6px;font-size:.74rem;font-weight:600;border:1px solid var(--bd2);background:var(--sf);color:var(--tx2);cursor:pointer;transition:all .14s;font-family:inherit;box-shadow:var(--sh)}
-.xml-act:hover{background:var(--sf2);border-color:var(--ac);color:var(--ac)}
-.xml-body{overflow:auto;max-height:380px;background:var(--bg)}
-pre.xcode{padding:1.25rem;font-family:'JetBrains Mono',Consolas,monospace;font-size:.82rem;line-height:1.7;white-space:pre;color:var(--tx);margin:0}
-.xt{color:#be185d;font-weight:600}
-body.theme-dark .xt{color:#f472b6}
-.xa{color:#4d7c0f;font-weight:500}
-body.theme-dark .xa{color:#a3e635}
-.xv{color:#1d4ed8}
-body.theme-dark .xv{color:#60a5fa}
-.xd{color:#b45309}
-body.theme-dark .xd{color:#fbbf24}
+    .header-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid var(--bd2);
+      background: var(--sf);
+      color: var(--tx2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .14s;
+      box-shadow: var(--sh)
+    }
 
-#fi{display:none}
-</style>
+    .header-btn:hover {
+      background: var(--sf2);
+      color: var(--tx)
+    }
+
+    .header-link {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--tx2);
+      text-decoration: none;
+      transition: color .14s
+    }
+
+    .header-link:hover {
+      color: var(--ac)
+    }
+
+    /* ── MAIN WORKSPACE ──────────────────────────────────────── */
+    .workspace {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .workspace-left {
+      width: 360px;
+      border-right: 1px solid var(--bd);
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+      overflow-y: auto;
+      gap: 1.5rem;
+      flex-shrink: 0;
+      transition: all .2s
+    }
+
+    .workspace-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      overflow-y: auto;
+      padding: 2rem;
+      transition: all .2s
+    }
+
+    /* Cards layout */
+    .card {
+      background: var(--sf);
+      border: 1px solid var(--bd);
+      border-radius: 6px;
+      overflow: hidden;
+      transition: all .2s
+    }
+
+    .card-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--bd);
+      display: flex;
+      align-items: center;
+      justify-content: between;
+    }
+
+    .card-header h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--tx3)
+    }
+
+    .card-body {
+      padding: 1.25rem
+    }
+
+    /* Drop Area */
+    .drop-area {
+      border: 2px dashed var(--bd2);
+      border-radius: 6px;
+      padding: 2.2rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      background: var(--bg)
+    }
+
+    .drop-area:hover,
+    .drop-area.over {
+      border-color: var(--ac);
+      background: var(--sf2);
+      transform: translateY(-1px)
+    }
+
+    .drop-ico {
+      font-size: 2.4rem;
+      opacity: .65;
+      margin-bottom: .5rem
+    }
+
+    .drop-t {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: .3rem;
+      color: var(--tx)
+    }
+
+    .drop-s {
+      font-size: 0.8rem;
+      color: var(--tx3);
+      margin-bottom: 0.9rem;
+      line-height: 1.4
+    }
+
+    /* Buttons */
+    .btn {
+      height: 36px;
+      padding: 0 1.2rem;
+      border-radius: 6px;
+      border: 1px solid var(--bd2);
+      background: var(--sf);
+      color: var(--tx2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .14s;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      box-shadow: var(--sh);
+      text-decoration: none;
+      white-space: nowrap;
+      line-height: 1
+    }
+
+    .btn:hover {
+      background: var(--sf2);
+      color: var(--tx);
+      border-color: var(--bd2)
+    }
+
+    .btn-primary {
+      background: var(--ac);
+      border-color: var(--ac);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(28, 144, 219, 0.2)
+    }
+
+    .btn-primary:hover {
+      background: var(--ac2);
+      border-color: var(--ac2);
+      color: #fff
+    }
+
+    .btn-sm {
+      height: 28px;
+      padding: 0 10px;
+      font-size: 0.73rem;
+      font-weight: 600;
+      gap: 5px;
+      flex-shrink: 0
+    }
+
+    /* Settings Form */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px
+    }
+
+    .form-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--tx3)
+    }
+
+    .form-input {
+      background: var(--bg);
+      border: 1px solid var(--bd2);
+      border-radius: 6px;
+      color: var(--tx);
+      padding: .45rem .75rem;
+      font-size: .85rem;
+      font-family: 'JetBrains Mono', monospace;
+      outline: none;
+      transition: border-color .15s;
+      width: 100%;
+      height: 38px
+    }
+
+    .form-input:focus {
+      border-color: var(--ac)
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      cursor: pointer;
+      padding: .3rem 0
+    }
+
+    .checkbox-container input {
+      accent-color: var(--ac);
+      width: 16px;
+      height: 16px;
+      cursor: pointer
+    }
+
+    .checkbox-container span {
+      font-size: 0.82rem;
+      color: var(--tx2);
+      font-weight: 500
+    }
+
+    /* Converted File List */
+    .flist {
+      display: flex;
+      flex-direction: column;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .fi {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      padding: .75rem 1rem;
+      cursor: pointer;
+      transition: background .1s;
+      border-bottom: 1px solid var(--bd)
+    }
+
+    .fi:last-child {
+      border-bottom: none
+    }
+
+    .fi:hover {
+      background: var(--sf2)
+    }
+
+    .fi.sel {
+      background: rgba(28, 144, 219, .08)
+    }
+
+    .fi-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: var(--ac)
+    }
+
+    .fi-dot.er {
+      background: var(--er)
+    }
+
+    .fi-body {
+      flex: 1;
+      min-width: 0
+    }
+
+    .fi-name {
+      font-size: .82rem;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--tx)
+    }
+
+    .fi-sub {
+      font-size: .7rem;
+      color: var(--tx3);
+      margin-top: 1px
+    }
+
+    .fi-time {
+      font-size: .7rem;
+      color: var(--tx3);
+      flex-shrink: 0
+    }
+
+    .fi-del {
+      display: none;
+      background: transparent;
+      border: none;
+      color: var(--tx3);
+      font-size: 1.1rem;
+      line-height: 1;
+      padding: 0 4px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all .12s;
+      margin-left: 4px
+    }
+
+    .fi:hover .fi-del {
+      display: block
+    }
+
+    .fi-del:hover {
+      color: var(--er);
+      background: rgba(239, 68, 68, .12)
+    }
+
+    /* Empty State Placeholder */
+    .empty-state {
+      text-align: center;
+      padding: 5rem 2rem;
+      max-width: 520px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem
+    }
+
+    .empty-state-icon {
+      font-size: 3.5rem;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      opacity: 0.8;
+      color: var(--ac)
+    }
+
+    .empty-state h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--tx);
+      letter-spacing: -0.03em;
+      transition: color .2s
+    }
+
+    .empty-state p {
+      font-size: 0.88rem;
+      color: var(--tx2);
+      line-height: 1.6
+    }
+
+    /* Details and Output */
+    .meta-row {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      background: var(--panel);
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--bd);
+      margin-bottom: 1.5rem
+    }
+
+    .meta-item {
+      color: var(--tx2)
+    }
+
+    .meta-item strong {
+      color: var(--tx3);
+      font-weight: 500;
+      margin-right: 4px
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .02em
+    }
+
+    .t-ok {
+      background: rgba(34, 197, 94, .11);
+      color: #22c55e;
+      border: 1px solid rgba(34, 197, 94, .2)
+    }
+
+    .t-er {
+      background: rgba(239, 68, 68, .11);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, .2)
+    }
+
+    .sec-label {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--tx3);
+      margin-bottom: .85rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem
+    }
+
+    .sec-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--bd)
+    }
+
+    /* Preview Block */
+    .preview-block {
+      background: var(--sf);
+      border: 1px solid var(--bd);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 1.8rem;
+      box-shadow: var(--sh)
+    }
+
+    .pbox {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      min-height: 240px;
+      transition: background .18s
+    }
+
+    .pbox.bg-d {
+      background: #0e0e11
+    }
+
+    .pbox.bg-l {
+      background: #f8f9fa;
+      border: 1px solid rgba(0, 0, 0, 0.03)
+    }
+
+    .pbox.bg-g {
+      background-color: #f1f3f5;
+      background-image: linear-gradient(45deg, #e9ecef 25%, transparent 25%), linear-gradient(-45deg, #e9ecef 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e9ecef 75%), linear-gradient(-45deg, transparent 75%, #e9ecef 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0
+    }
+
+    body.theme-dark .pbox.bg-g {
+      background-color: #161719;
+      background-image: linear-gradient(45deg, #202124 25%, transparent 25%), linear-gradient(-45deg, #202124 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #202124 75%), linear-gradient(-45deg, transparent 75%, #202124 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0
+    }
+
+    .pbox svg {
+      max-height: 170px;
+      max-width: 100%;
+      display: block
+    }
+
+    .pfooter {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .6rem 1rem;
+      border-top: 1px solid var(--bd);
+      background: var(--panel)
+    }
+
+    .pf-label {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--tx3);
+      margin-right: auto
+    }
+
+    .bgb {
+      padding: .3rem .75rem;
+      border-radius: 6px;
+      font-size: .72rem;
+      font-weight: 700;
+      border: 1px solid var(--bd2);
+      background: var(--sf);
+      color: var(--tx2);
+      cursor: pointer;
+      transition: all .12s;
+      font-family: inherit;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      box-shadow: var(--sh)
+    }
+
+    .bgb:hover {
+      color: var(--tx);
+      background: var(--sf2)
+    }
+
+    .bgb.on {
+      background: rgba(28, 144, 219, .08);
+      border-color: rgba(28, 144, 219, .3);
+      color: var(--ac)
+    }
+
+    body.theme-dark .bgb.on {
+      background: rgba(28, 144, 219, .12);
+      border-color: rgba(28, 144, 219, .32);
+      color: #1c90db
+    }
+
+    /* XML Output Card (Notion/Linear motivated alert style) */
+    .xml-alert-card {
+      background: var(--panel);
+      border: 1px solid var(--bd);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 1.8rem;
+      box-shadow: var(--sh);
+    }
+
+    .xmlh {
+      display: flex;
+      align-items: center;
+      padding: .65rem 1rem;
+      border-bottom: 1px solid var(--bd);
+      background: var(--sf);
+      justify-content: space-between
+    }
+
+    .xmlh-t {
+      font-size: .74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--ac);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .xml-act {
+      padding: .35rem .85rem;
+      border-radius: 6px;
+      font-size: .74rem;
+      font-weight: 600;
+      border: 1px solid var(--bd2);
+      background: var(--sf);
+      color: var(--tx2);
+      cursor: pointer;
+      transition: all .14s;
+      font-family: inherit;
+      box-shadow: var(--sh)
+    }
+
+    .xml-act:hover {
+      background: var(--sf2);
+      border-color: var(--ac);
+      color: var(--ac)
+    }
+
+    .xml-body {
+      overflow: auto;
+      max-height: 380px;
+      background: var(--bg)
+    }
+
+    pre.xcode {
+      padding: 1.25rem;
+      font-family: 'JetBrains Mono', Consolas, monospace;
+      font-size: .82rem;
+      line-height: 1.7;
+      white-space: pre;
+      color: var(--tx);
+      margin: 0
+    }
+
+    .xt {
+      color: #be185d;
+      font-weight: 600
+    }
+
+    body.theme-dark .xt {
+      color: #f472b6
+    }
+
+    .xa {
+      color: #4d7c0f;
+      font-weight: 500
+    }
+
+    body.theme-dark .xa {
+      color: #a3e635
+    }
+
+    .xv {
+      color: #1d4ed8
+    }
+
+    body.theme-dark .xv {
+      color: #60a5fa
+    }
+
+    .xd {
+      color: #b45309
+    }
+
+    body.theme-dark .xd {
+      color: #fbbf24
+    }
+
+    #fi {
+      display: none
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- ── HEADER ── -->
-<header class="app-header">
-  <div class="logo-group">
-    <div class="logo">
-      <img src="assets/logo.svg" alt="logo" class="logo-img">
-    </div>
-    <span class="logo-text">Vectroid</span>
-    <span class="logo-badge">v1.0.1</span>
-  </div>
-  <div class="header-actions">
-    <button class="header-btn" id="themeToggle" title="Toggle Theme">
-      <svg class="sun-icon" style="display:none;" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-      <svg class="moon-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-    </button>
-  </div>
-</header>
-
-<!-- ── MAIN WORKSPACE ── -->
-<main class="workspace">
-  
-  <!-- LEFT PANEL: Upload & Configuration -->
-  <div class="workspace-left">
-    <!-- Card: Upload -->
-    <div class="card">
-      <div class="card-header">
-        <h3>Upload SVG</h3>
+  <!-- ── HEADER ── -->
+  <header class="app-header">
+    <div class="logo-group">
+      <div class="logo">
+        <img src="assets/logo.svg" alt="logo" class="logo-img">
       </div>
-      <div class="card-body">
-        <div class="drop-area" id="dropArea">
-          <div class="drop-ico">📂</div>
-          <div class="drop-t">Drop SVG files here</div>
-          <div class="drop-s">or drag anywhere on the page</div>
-          <button class="btn btn-primary" id="browseBtn">Choose SVG Files</button>
-        </div>
-      </div>
+      <span class="logo-text">Vectroid</span>
+      <span class="logo-badge">v1.0.1</span>
     </div>
-
-    <!-- Card: Options -->
-    <div class="card">
-      <div class="card-header">
-        <h3>Settings</h3>
-      </div>
-      <div class="card-body">
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Width (dp)</label>
-            <input class="form-input" type="text" id="optW" value="auto" placeholder="auto">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Height (dp)</label>
-            <input class="form-input" type="text" id="optH" value="auto" placeholder="auto">
-          </div>
-        </div>
-        <label class="checkbox-container" style="margin-top: 1.2rem;">
-          <input type="checkbox" id="optFix">
-          <span>Fix fill type (evenodd → nonzero)</span>
-        </label>
-      </div>
+    <div class="header-actions">
+      <button class="header-btn" id="themeToggle" title="Toggle Theme">
+        <svg class="sun-icon" style="display:none;" width="16" height="16" fill="none" stroke="currentColor"
+          stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <svg class="moon-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+        </svg>
+      </button>
     </div>
+  </header>
 
-    <!-- Card: History list (Hidden by default, shown when files exist) -->
-    <div class="card" id="historyCard" style="display: none;">
-      <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <h3>Converted History</h3>
-        <button class="btn btn-sm" id="addBtn" title="Add SVG files">
-          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span>Add SVG</span>
-        </button>
-      </div>
-      <div class="flist" id="flist" style="max-height: 220px; overflow-y: auto;"></div>
-    </div>
-  </div>
+  <!-- ── MAIN WORKSPACE ── -->
+  <main class="workspace">
 
-  <!-- RIGHT PANEL: Preview & Results -->
-  <div class="workspace-right">
-    
-    <!-- Empty state placeholder -->
-    <div class="empty-state" id="emptyState">
-      <div class="empty-state-icon">⚡</div>
-      <h2>Vectroid Converter</h2>
-      <p>Upload one or more SVG files to start. The generated VectorDrawable XML and live previews will render here in real-time.</p>
-    </div>
-
-    <!-- Results Panel (Hidden initially) -->
-    <div id="resultPanel" style="display: none;">
+    <!-- LEFT PANEL: Upload & Configuration -->
+    <div class="workspace-left">
+      <!-- Card: Upload -->
       <div class="card">
-        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 10px;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <h3 id="dTitle" style="color: var(--tx); font-size: 0.95rem; font-weight: 700;">filename.xml</h3>
-            <span class="tag t-ok" id="dStatus">Converted</span>
-          </div>
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <button class="btn btn-sm" id="dlZipBtn" title="Download all converted XML files as ZIP archive" style="color: var(--ac); border-color: rgba(28,144,219,0.35); background: rgba(28,144,219,0.06);">
-              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              <span>Download All (.zip)</span>
-            </button>
-            <button class="btn btn-sm" id="clearBtn" title="Clear all converted history" style="color: var(--er); border-color: rgba(239,68,68,0.25); background: rgba(239,68,68,0.05);">
-              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-              <span>Clear All</span>
-            </button>
-          </div>
+        <div class="card-header">
+          <h3>Upload SVG</h3>
         </div>
         <div class="card-body">
-          
-          <div class="meta-row">
-            <div class="meta-item"><strong>Paths:</strong> <span id="dPaths">—</span></div>
-            <div class="meta-item"><strong>Size:</strong> <span id="dSize">—</span></div>
-            <div class="meta-item"><strong>Viewport:</strong> <span id="dVP">—</span></div>
+          <div class="drop-area" id="dropArea">
+            <div class="drop-ico">📂</div>
+            <div class="drop-t">Drop SVG files here</div>
+            <div class="drop-s">or drag anywhere on the page</div>
+            <button class="btn btn-primary" id="browseBtn">Choose SVG Files</button>
           </div>
-
-          <div class="sec-label">Preview</div>
-          <div class="preview-block">
-            <div class="pbox bg-l" id="prevBox"></div>
-            <div class="pfooter">
-              <span class="pf-label">Background</span>
-              <button class="bgb on" data-bg="bg-l">Light</button>
-              <button class="bgb" data-bg="bg-g">Grid</button>
-            </div>
-          </div>
-
-          <div class="sec-label">XML Output</div>
-          <div class="xml-alert-card">
-            <div class="xmlh">
-              <span class="xmlh-t">
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                VectorDrawable XML
-              </span>
-              <div style="display: flex; gap: 8px;">
-                <button class="xml-act" id="xmlCopy">Copy Code</button>
-                <button class="xml-act" id="xmlDl">Download XML</button>
-              </div>
-            </div>
-            <div class="xml-body">
-              <pre class="xcode" id="xmlCode"></pre>
-            </div>
-          </div>
-
         </div>
+      </div>
+
+      <!-- Card: Options -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Settings</h3>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Width (dp)</label>
+              <input class="form-input" type="text" id="optW" value="auto" placeholder="auto">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Height (dp)</label>
+              <input class="form-input" type="text" id="optH" value="auto" placeholder="auto">
+            </div>
+          </div>
+          <label class="checkbox-container" style="margin-top: 1.2rem;">
+            <input type="checkbox" id="optFix">
+            <span>Fix fill type (evenodd → nonzero)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Card: History list (Hidden by default, shown when files exist) -->
+      <div class="card" id="historyCard" style="display: none;">
+        <div class="card-header"
+          style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <h3>Converted History</h3>
+          <button class="btn btn-sm" id="addBtn" title="Add SVG files">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            <span>Add SVG</span>
+          </button>
+        </div>
+        <div class="flist" id="flist" style="max-height: 220px; overflow-y: auto;"></div>
       </div>
     </div>
 
-  </div>
-</main>
+    <!-- RIGHT PANEL: Preview & Results -->
+    <div class="workspace-right">
 
-<input type="file" id="fi" accept=".svg,image/svg+xml" multiple>
+      <!-- Empty state placeholder -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-state-icon">⚡</div>
+        <h2>Vectroid Converter</h2>
+        <p>Upload one or more SVG files to start. The generated VectorDrawable XML and live previews will render here in
+          real-time.</p>
+      </div>
 
-<script>
-'use strict';
-/* ════ COLORS & STYLE RESOLUTION ════════════════════════════════════ */
-function h2(n){return Math.max(0,Math.min(255,Math.round(n))).toString(16).padStart(2,'0')}
+      <!-- Results Panel (Hidden initially) -->
+      <div id="resultPanel" style="display: none;">
+        <div class="card">
+          <div class="card-header"
+            style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <h3 id="dTitle" style="color: var(--tx); font-size: 0.95rem; font-weight: 700;">filename.xml</h3>
+              <span class="tag t-ok" id="dStatus">Converted</span>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <button class="btn btn-sm" id="dlZipBtn" title="Download all converted XML files as ZIP archive"
+                style="color: var(--ac); border-color: rgba(28,144,219,0.35); background: rgba(28,144,219,0.06);">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                <span>Download All (.zip)</span>
+              </button>
+              <button class="btn btn-sm" id="clearBtn" title="Clear all converted history"
+                style="color: var(--er); border-color: rgba(239,68,68,0.25); background: rgba(239,68,68,0.05);">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  <line x1="10" y1="11" x2="10" y2="17" />
+                  <line x1="14" y1="11" x2="14" y2="17" />
+                </svg>
+                <span>Clear All</span>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
 
-// Parse any CSS color format (hex, rgb, rgba, hsl, named, etc.) using a canvas context
-function parseCssColor(colorStr) {
-  if (!colorStr || colorStr === 'none' || colorStr === 'transparent') return null;
-  const ctx = document.createElement('canvas').getContext('2d');
-  ctx.fillStyle = colorStr;
-  const resolved = ctx.fillStyle;
-  if (!resolved || resolved === 'none' || resolved === 'transparent') return null;
-  if (resolved.startsWith('#')) {
-    const r = parseInt(resolved.slice(1, 3), 16);
-    const g = parseInt(resolved.slice(3, 5), 16);
-    const b = parseInt(resolved.slice(5, 7), 16);
-    return [r, g, b, 1];
-  }
-  const m = resolved.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+)\s*)?\)$/);
-  if (m) {
-    return [
-      parseInt(m[1]),
-      parseInt(m[2]),
-      parseInt(m[3]),
-      m[4] !== undefined ? parseFloat(m[4]) : 1
-    ];
-  }
-  return [0, 0, 0, 1];
-}
+            <div class="meta-row">
+              <div class="meta-item"><strong>Paths:</strong> <span id="dPaths">—</span></div>
+              <div class="meta-item"><strong>Size:</strong> <span id="dSize">—</span></div>
+              <div class="meta-item"><strong>Viewport:</strong> <span id="dVP">—</span></div>
+            </div>
 
-function colorToAndroidHex(rgba, opacityMultiplier = 1) {
-  if (!rgba) return '#00000000';
-  const [r, g, b, a] = rgba;
-  const finalAlpha = a * opacityMultiplier;
-  if (finalAlpha >= 1) {
-    return '#' + h2(r) + h2(g) + h2(b);
-  }
-  return '#' + h2(finalAlpha * 255) + h2(r) + h2(g) + h2(b);
-}
+            <div class="sec-label">Preview</div>
+            <div class="preview-block">
+              <div class="pbox bg-l" id="prevBox"></div>
+              <div class="pfooter">
+                <span class="pf-label">Background</span>
+                <button class="bgb on" data-bg="bg-l">Light</button>
+                <button class="bgb" data-bg="bg-g">Grid</button>
+              </div>
+            </div>
 
-/* ════ SHAPE → PATH ══════════════════════════════════════════════════ */
-function s2p(el){
-  const t=(el.localName||el.tagName||'').toLowerCase().replace(/^svg:/,'');
-  switch(t){
-    case 'path': return el.getAttribute('d');
-    case 'rect':{
-      const x=+el.getAttribute('x')||0,y=+el.getAttribute('y')||0,w=+el.getAttribute('width')||0,h=+el.getAttribute('height')||0;
-      if(!w||!h) return null;
-      const ra=el.getAttribute('rx'),rb=el.getAttribute('ry');
-      let rx=ra!=null?+ra:(rb!=null?+rb:0),ry=rb!=null?+rb:rx;
-      rx=Math.min(rx,w/2);ry=Math.min(ry,h/2);
-      if(!rx&&!ry) return `M${x},${y}H${x+w}V${y+h}H${x}Z`;
-      return `M${x+rx},${y}H${x+w-rx}A${rx},${ry},0,0,1,${x+w},${y+ry}V${y+h-ry}A${rx},${ry},0,0,1,${x+w-rx},${y+h}H${x+rx}A${rx},${ry},0,0,1,${x},${y+h-ry}V${y+ry}A${rx},${ry},0,0,1,${x+rx},${y}Z`;
+            <div class="sec-label">XML Output</div>
+            <div class="xml-alert-card">
+              <div class="xmlh">
+                <span class="xmlh-t">
+                  <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                  </svg>
+                  VectorDrawable XML
+                </span>
+                <div style="display: flex; gap: 8px;">
+                  <button class="xml-act" id="xmlCopy">Copy Code</button>
+                  <button class="xml-act" id="xmlDl">Download XML</button>
+                </div>
+              </div>
+              <div class="xml-body">
+                <pre class="xcode" id="xmlCode"></pre>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <input type="file" id="fi" accept=".svg,image/svg+xml" multiple>
+
+  <script>
+    'use strict';
+    /* ════ COLORS & STYLE RESOLUTION ════════════════════════════════════ */
+    function h2(n) { return Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, '0') }
+
+    // Parse any CSS color format (hex, rgb, rgba, hsl, named, etc.) using a canvas context
+    function parseCssColor(colorStr) {
+      if (!colorStr || colorStr === 'none' || colorStr === 'transparent') return null;
+      const ctx = document.createElement('canvas').getContext('2d');
+      ctx.fillStyle = colorStr;
+      const resolved = ctx.fillStyle;
+      if (!resolved || resolved === 'none' || resolved === 'transparent') return null;
+      if (resolved.startsWith('#')) {
+        const r = parseInt(resolved.slice(1, 3), 16);
+        const g = parseInt(resolved.slice(3, 5), 16);
+        const b = parseInt(resolved.slice(5, 7), 16);
+        return [r, g, b, 1];
+      }
+      const m = resolved.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+)\s*)?\)$/);
+      if (m) {
+        return [
+          parseInt(m[1]),
+          parseInt(m[2]),
+          parseInt(m[3]),
+          m[4] !== undefined ? parseFloat(m[4]) : 1
+        ];
+      }
+      return [0, 0, 0, 1];
     }
-    case 'circle':{const cx=+el.getAttribute('cx')||0,cy=+el.getAttribute('cy')||0,r=+el.getAttribute('r')||0;if(!r)return null;return `M${cx-r},${cy}A${r},${r},0,1,0,${cx+r},${cy}A${r},${r},0,1,0,${cx-r},${cy}Z`;}
-    case 'ellipse':{const cx=+el.getAttribute('cx')||0,cy=+el.getAttribute('cy')||0,rx=+el.getAttribute('rx')||0,ry=+el.getAttribute('ry')||0;if(!rx||!ry)return null;return `M${cx-rx},${cy}A${rx},${ry},0,1,0,${cx+rx},${cy}A${rx},${ry},0,1,0,${cx-rx},${cy}Z`;}
-    case 'line':return `M${el.getAttribute('x1')||0},${el.getAttribute('y1')||0}L${el.getAttribute('x2')||0},${el.getAttribute('y2')||0}`;
-    case 'polygon':case 'polyline':{const pts=(el.getAttribute('points')||'').trim().split(/[\s,]+/).filter(Boolean).map(Number);if(pts.length<4)return null;let d=`M${pts[0]},${pts[1]}`;for(let i=2;i<pts.length-1;i+=2)d+=`L${pts[i]},${pts[i+1]}`;return t==='polygon'?d+'Z':d;}
-    default:return null;
-  }
-}
 
-/* ════ COLLECT PATHS ═════════════════════════════════════════════════ */
-const SKIP=new Set(['defs','symbol','metadata','title','desc','style','script','lineargradient','radialgradient','pattern','clippath','mask','filter','marker','use','image','text','tspan','textpath','switch']);
-function collect(el,opts,out){
-  const t=(el.localName||el.tagName||'').toLowerCase().replace(/^svg:/,'');
-  if(SKIP.has(t)) return;
-  const style = window.getComputedStyle(el);
-  if(style.display==='none'||style.visibility==='hidden') return;
-
-  if(['g','svg','a','marker'].includes(t)){
-    for(const c of el.children) collect(c,opts,out);
-    return;
-  }
-
-  const pd=s2p(el);
-  if(!pd||!pd.trim()) return;
-
-  const fcRgba = parseCssColor(style.fill);
-  const scRgba = parseCssColor(style.stroke);
-  const fo = parseFloat(style.fillOpacity || 1);
-  const so = parseFloat(style.strokeOpacity || 1);
-  const op = parseFloat(style.opacity || 1);
-
-  const fc = fcRgba ? '#' + h2(fcRgba[0]) + h2(fcRgba[1]) + h2(fcRgba[2]) : null;
-  const fa = fcRgba ? parseFloat((fcRgba[3] * fo * op).toFixed(3)) : 1;
-
-  const sc = scRgba ? '#' + h2(scRgba[0]) + h2(scRgba[1]) + h2(scRgba[2]) : null;
-  const sa = scRgba ? parseFloat((scRgba[3] * so * op).toFixed(3)) : 1;
-
-  let sw2 = parseFloat(style.strokeWidth) || 0;
-  if(style.stroke !== 'none' && sc && !sw2) {
-    sw2 = 1;
-  }
-
-  let ft = 'nonZero';
-  if ((style.fillRule || '').trim().toLowerCase() === 'evenodd') {
-    ft = opts.fix ? 'nonZero' : 'evenOdd';
-  }
-
-  const slc = style.strokeLinecap || 'butt';
-  const slj = style.strokeLinejoin || 'miter';
-
-  out.push({pd,fc,fa,sc,sa,sw:sw2,ft,slc,slj});
-}
-
-/* ════ CONVERT ═══════════════════════════════════════════════════════ */
-function convert(svgText,opts){
-  const wrapper = document.createElement('div');
-  wrapper.style.position = 'fixed';
-  wrapper.style.left = '-9999px';
-  wrapper.style.top = '-9999px';
-  wrapper.style.width = '1px';
-  wrapper.style.height = '1px';
-  wrapper.style.overflow = 'hidden';
-  wrapper.style.color = '#000000';
-  wrapper.innerHTML = svgText;
-  document.body.appendChild(wrapper);
-
-  const svg = wrapper.querySelector('svg');
-  if(!svg) {
-    document.body.removeChild(wrapper);
-    throw new Error('Invalid SVG file.');
-  }
-
-  let vbw=0,vbh=0;
-  const vb=svg.getAttribute('viewBox');if(vb){const p=vb.trim().split(/[\s,]+/).map(Number);vbw=p[2]||0;vbh=p[3]||0;}
-  const sw=parseFloat(svg.getAttribute('width'))||vbw||24,sh=parseFloat(svg.getAttribute('height'))||vbh||24;
-  if(!vbw)vbw=sw;if(!vbh)vbh=sh;
-  const outW=opts.w==='auto'||!opts.w?Math.round(sw):(parseFloat(opts.w)||Math.round(sw));
-  const outH=opts.h==='auto'||!opts.h?Math.round(sh):(parseFloat(opts.h)||Math.round(sh));
-  
-  const paths=[];
-  collect(svg,{fix:opts.fix},paths);
-
-  document.body.removeChild(wrapper);
-
-  let xml=`<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"\n    android:viewportWidth="${vbw}"\n    android:viewportHeight="${vbh}"\n    android:width="${outW}dp"\n    android:height="${outH}dp">\n`;
-  for(const p of paths){
-    const attrs = [];
-    attrs.push(`android:pathData="${xe(p.pd)}"`);
-    if(p.fc && p.fc !== '#00000000' && p.fa > 0){
-      attrs.push(`android:fillColor="${p.fc}"`);
-      if(p.fa<1) attrs.push(`android:fillAlpha="${p.fa}"`);
+    function colorToAndroidHex(rgba, opacityMultiplier = 1) {
+      if (!rgba) return '#00000000';
+      const [r, g, b, a] = rgba;
+      const finalAlpha = a * opacityMultiplier;
+      if (finalAlpha >= 1) {
+        return '#' + h2(r) + h2(g) + h2(b);
+      }
+      return '#' + h2(finalAlpha * 255) + h2(r) + h2(g) + h2(b);
     }
-    if(p.sc&&p.sw>0){
-      attrs.push(`android:strokeColor="${p.sc}"`);
-      attrs.push(`android:strokeWidth="${p.sw}"`);
-      if(p.sa<1) attrs.push(`android:strokeAlpha="${p.sa}"`);
-      if(p.slc!=='butt') attrs.push(`android:strokeLineCap="${p.slc}"`);
-      if(p.slj!=='miter') attrs.push(`android:strokeLineJoin="${p.slj}"`);
-    }
-    if(p.ft!=='nonZero') attrs.push(`android:fillType="${p.ft}"`);
-    xml+=`    <path\n        ` + attrs.join('\n        ') + ` />\n`;
-  }
-  xml+=`</vector>`;
-  return{xml,n:paths.length,w:outW,h:outH,vw:vbw,vh:vbh};
-}
 
-/* ════ VD → PREVIEW SVG ══════════════════════════════════════════════ */
-function getVdAttr(el, name) {
-  const ln = name.toLowerCase();
-  for (const attr of el.attributes) {
-    const aln = attr.localName.toLowerCase();
-    const an = attr.name.toLowerCase();
-    if (aln === ln || an === 'android:' + ln || an === ln) {
-      return attr.value;
-    }
-  }
-  return null;
-}
-
-function androidHexToWebColor(colorStr) {
-  if (!colorStr) return 'none';
-  colorStr = colorStr.trim();
-  if (colorStr === 'none' || colorStr === 'transparent' || colorStr === '#00000000') return 'none';
-  if (colorStr.startsWith('#') && colorStr.length === 9) {
-    // Android #AARRGGBB -> CSS rgba(r,g,b,a)
-    const a = parseInt(colorStr.slice(1, 3), 16) / 255;
-    const r = parseInt(colorStr.slice(3, 5), 16);
-    const g = parseInt(colorStr.slice(5, 7), 16);
-    const b = parseInt(colorStr.slice(7, 9), 16);
-    return `rgba(${r}, ${g}, ${b}, ${a.toFixed(3)})`;
-  }
-  return colorStr;
-}
-
-function vd2svg(vdXml){
-  try{
-    const doc=new DOMParser().parseFromString(vdXml,'application/xml');
-    const v=doc.documentElement;if(!v||v.tagName==='parsererror') return null;
-    const vw=parseFloat(getVdAttr(v, 'viewportWidth'))||24,vh=parseFloat(getVdAttr(v, 'viewportHeight'))||24;
-    let s='';
-    function walk(el){
-      for(const c of el.children){
-        const tag = (c.localName || c.tagName || '').toLowerCase();
-        if(tag==='path'){
-          const d=getVdAttr(c, 'pathData')||'';
-          const fillAttr=getVdAttr(c, 'fillColor');
-          const fill=fillAttr ? androidHexToWebColor(fillAttr) : 'none';
-          const fillAlpha=getVdAttr(c, 'fillAlpha')||'1';
-          const stroke=androidHexToWebColor(getVdAttr(c, 'strokeColor') || 'none');
-          const strokeAlpha=getVdAttr(c, 'strokeAlpha')||'1';
-          const sw=getVdAttr(c, 'strokeWidth')||'0';
-          const slc=getVdAttr(c, 'strokeLineCap')||'butt';
-          const slj=getVdAttr(c, 'strokeLineJoin')||'miter';
-          const ft=getVdAttr(c, 'fillType');
-          const fr=ft==='evenOdd'?'evenodd':'nonzero';
-          s+=`<path d="${he(d)}" fill="${he(fill)}" fill-opacity="${fillAlpha}"`;
-          if(stroke!=='none'&&parseFloat(sw)>0){
-            s+=` stroke="${he(stroke)}" stroke-width="${sw}" stroke-opacity="${strokeAlpha}"`;
-            if(slc!=='butt')s+=` stroke-linecap="${slc}"`;
-            if(slj!=='miter')s+=` stroke-linejoin="${slj}"`;
-          }
-          s+=` fill-rule="${fr}"/>`;
-        }else if(tag==='group'){
-          walk(c);
+    /* ════ SHAPE → PATH ══════════════════════════════════════════════════ */
+    function s2p(el) {
+      const t = (el.localName || el.tagName || '').toLowerCase().replace(/^svg:/, '');
+      switch (t) {
+        case 'path': return el.getAttribute('d');
+        case 'rect': {
+          const x = +el.getAttribute('x') || 0, y = +el.getAttribute('y') || 0, w = +el.getAttribute('width') || 0, h = +el.getAttribute('height') || 0;
+          if (!w || !h) return null;
+          const ra = el.getAttribute('rx'), rb = el.getAttribute('ry');
+          let rx = ra != null ? +ra : (rb != null ? +rb : 0), ry = rb != null ? +rb : rx;
+          rx = Math.min(rx, w / 2); ry = Math.min(ry, h / 2);
+          if (!rx && !ry) return `M${x},${y}H${x + w}V${y + h}H${x}Z`;
+          return `M${x + rx},${y}H${x + w - rx}A${rx},${ry},0,0,1,${x + w},${y + ry}V${y + h - ry}A${rx},${ry},0,0,1,${x + w - rx},${y + h}H${x + rx}A${rx},${ry},0,0,1,${x},${y + h - ry}V${y + ry}A${rx},${ry},0,0,1,${x + rx},${y}Z`;
         }
+        case 'circle': { const cx = +el.getAttribute('cx') || 0, cy = +el.getAttribute('cy') || 0, r = +el.getAttribute('r') || 0; if (!r) return null; return `M${cx - r},${cy}A${r},${r},0,1,0,${cx + r},${cy}A${r},${r},0,1,0,${cx - r},${cy}Z`; }
+        case 'ellipse': { const cx = +el.getAttribute('cx') || 0, cy = +el.getAttribute('cy') || 0, rx = +el.getAttribute('rx') || 0, ry = +el.getAttribute('ry') || 0; if (!rx || !ry) return null; return `M${cx - rx},${cy}A${rx},${ry},0,1,0,${cx + rx},${cy}A${rx},${ry},0,1,0,${cx - rx},${cy}Z`; }
+        case 'line': return `M${el.getAttribute('x1') || 0},${el.getAttribute('y1') || 0}L${el.getAttribute('x2') || 0},${el.getAttribute('y2') || 0}`;
+        case 'polygon': case 'polyline': { const pts = (el.getAttribute('points') || '').trim().split(/[\s,]+/).filter(Boolean).map(Number); if (pts.length < 4) return null; let d = `M${pts[0]},${pts[1]}`; for (let i = 2; i < pts.length - 1; i += 2)d += `L${pts[i]},${pts[i + 1]}`; return t === 'polygon' ? d + 'Z' : d; }
+        default: return null;
       }
     }
-    walk(v);
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${vw} ${vh}" style="max-height:115px;max-width:100%;display:block">${s}</svg>`;
-  }catch{return null;}
-}
 
-/* ════ UTILS ═════════════════════════════════════════════════════════ */
-function xe(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function he(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function hl(xml){
-  if(!xml) return '';
-  const safe = String(xml).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  return safe.replace(/(&lt;\/?[a-zA-Z0-9_:-]+)|(\/&gt;|&gt;)|([a-zA-Z0-9_:-]+)(?=\s*=)|("[\s\S]*?"|'[\s\S]*?')/g, function(match, tag, endTag, attr, val) {
-    if (tag) return `<span class="xt">${tag}</span>`;
-    if (endTag) return `<span class="xt">${endTag}</span>`;
-    if (attr) return `<span class="xa">${attr}</span>`;
-    if (val) return `<span class="xv">${val}</span>`;
-    return match;
-  });
-}
-function now(){const d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
-
-/* ════ STATE ═════════════════════════════════════════════════════════ */
-let store=[],active=-1;
-function opts(){return{w:document.getElementById('optW').value.trim().toLowerCase(),h:document.getElementById('optH').value.trim().toLowerCase(),fix:document.getElementById('optFix').checked};}
-
-/* ════ PROCESS ═══════════════════════════════════════════════════════ */
-async function run(files){
-  const list=Array.from(files).filter(f=>f.name.match(/\.svg$/i)||f.type==='image/svg+xml');
-  if(!list.length){alert('Please select .svg files.');return;}
-  const o=opts();
-  for(const f of list){
-    try{
-      const res=convert(await f.text(),o);
-      store.push({ok:true,name:f.name.replace(/\.svg$/i,'.xml'),xml:res.xml,svg:vd2svg(res.xml),n:res.n,w:res.w,h:res.h,vw:res.vw,vh:res.vh,t:now()});
-    }catch(e){
-      store.push({ok:false,name:f.name,err:e.message,t:now()});
+    /* ════ MATRIX & TRANSFORM UTILS ═════════════════════════════════════ */
+    function multiplyMatrices(m1, m2) {
+      const [a1, b1, c1, d1, e1, f1] = m1;
+      const [a2, b2, c2, d2, e2, f2] = m2;
+      return [
+        a1 * a2 + c1 * b2,
+        b1 * a2 + d1 * b2,
+        a1 * c2 + c1 * d2,
+        b1 * c2 + d1 * d2,
+        a1 * e2 + c1 * f2 + e1,
+        b1 * e2 + d1 * f2 + f1
+      ];
     }
-  }
-  renderList();
-  selectItem(store.length-1);
-}
 
-/* ════ RENDER LIST ════════════════════════════════════════════════════ */
-function renderList(){
-  const box=document.getElementById('flist');
-  const histCard=document.getElementById('historyCard');
-  if(!store.length){
-    histCard.style.display='none';
-    document.getElementById('resultPanel').style.display='none';
-    document.getElementById('emptyState').style.display='flex';
-    return;
-  }
-  histCard.style.display='block';
-  box.innerHTML='';
-  store.forEach((r,i)=>{
-    const el=document.createElement('div');
-    el.className='fi'+(i===active?' sel':'');
-    el.innerHTML=`<div class="fi-dot${r.ok?'':' er'}"></div><div class="fi-body"><div class="fi-name">${he(r.name)}</div><div class="fi-sub">${he(r.ok?`${r.n} path${r.n!==1?'s':''} · ${r.w}×${r.h}dp`:r.err.slice(0,32))}</div></div><div class="fi-time">${r.t}</div><button class="fi-del" title="Remove item">×</button>`;
-    el.onclick=(e)=>{
-      if(e.target.closest('.fi-del')) return;
-      selectItem(i);
-    };
-    const delBtn = el.querySelector('.fi-del');
-    delBtn.onclick=(e)=>{
-      e.stopPropagation();
-      removeHistoryItem(i);
-    };
-    box.appendChild(el);
-  });
-}
+    function parseTransformAttribute(transformStr) {
+      let res = [1, 0, 0, 1, 0, 0];
+      if (!transformStr) return res;
+      const regex = /(matrix|translate|scale|rotate|skewX|skewY)\s*\(([^)]+)\)/gi;
+      let match;
+      while ((match = regex.exec(transformStr)) !== null) {
+        const type = match[1].toLowerCase();
+        const args = match[2].trim().split(/[\s,]+/).map(Number);
+        let m = [1, 0, 0, 1, 0, 0];
+        if (type === 'matrix' && args.length >= 6) {
+          m = [args[0], args[1], args[2], args[3], args[4], args[5]];
+        } else if (type === 'translate') {
+          const tx = args[0] || 0, ty = args[1] !== undefined ? args[1] : 0;
+          m = [1, 0, 0, 1, tx, ty];
+        } else if (type === 'scale') {
+          const sx = args[0] || 1, sy = args[1] !== undefined ? args[1] : sx;
+          m = [sx, 0, 0, sy, 0, 0];
+        } else if (type === 'rotate') {
+          const angle = (args[0] || 0) * Math.PI / 180;
+          const cos = Math.cos(angle), sin = Math.sin(angle);
+          const cx = args[1] || 0, cy = args[2] || 0;
+          if (cx || cy) {
+            m = [cos, sin, -sin, cos, cx - cx * cos + cy * sin, cy - cx * sin - cy * cos];
+          } else {
+            m = [cos, sin, -sin, cos, 0, 0];
+          }
+        } else if (type === 'skewx') {
+          const tan = Math.tan((args[0] || 0) * Math.PI / 180);
+          m = [1, 0, tan, 1, 0, 0];
+        } else if (type === 'skewy') {
+          const tan = Math.tan((args[0] || 0) * Math.PI / 180);
+          m = [1, tan, 0, 1, 0, 0];
+        }
+        res = multiplyMatrices(res, m);
+      }
+      return res;
+    }
 
-function removeHistoryItem(i){
-  store.splice(i, 1);
-  if(!store.length){
-    active = -1;
+    function getElementTransformMatrix(el, svg) {
+      try {
+        if (el.getScreenCTM && svg && svg.getScreenCTM) {
+          const sCTM = svg.getScreenCTM();
+          const eCTM = el.getScreenCTM();
+          if (sCTM && eCTM) {
+            const invS = sCTM.inverse();
+            const m = invS.multiply(eCTM);
+            if (m && !isNaN(m.a)) {
+              return [m.a, m.b, m.c, m.d, m.e, m.f];
+            }
+          }
+        }
+      } catch (e) {}
+
+      let matrix = [1, 0, 0, 1, 0, 0];
+      let curr = el;
+      while (curr && curr !== svg && curr !== document.body) {
+        const transformAttr = curr.getAttribute('transform');
+        if (transformAttr) {
+          const m = parseTransformAttribute(transformAttr);
+          matrix = multiplyMatrices(m, matrix);
+        }
+        curr = curr.parentElement;
+      }
+      return matrix;
+    }
+
+    function transformPathData(d, m) {
+      if (!d || !m) return d;
+      const [ma, mb, mc, md, me, mf] = m;
+      const isIdentity = Math.abs(ma - 1) < 1e-6 && Math.abs(mb) < 1e-6 && Math.abs(mc) < 1e-6 && Math.abs(md - 1) < 1e-6 && Math.abs(me) < 1e-6 && Math.abs(mf) < 1e-6;
+      if (isIdentity) return d;
+
+      function pt(x, y) {
+        const nx = ma * x + mc * y + me;
+        const ny = mb * x + md * y + mf;
+        return [Math.round(nx * 1000) / 1000, Math.round(ny * 1000) / 1000];
+      }
+
+      const tokens = [];
+      const regex = /([a-df-z])|(-?\d+(?:\.\d+)?(?:e[-+]?\d+)?)/gi;
+      let match;
+      while ((match = regex.exec(d)) !== null) {
+        if (match[1]) tokens.push(match[1]);
+        else tokens.push(parseFloat(match[2]));
+      }
+
+      let i = 0;
+      let curX = 0, curY = 0, startX = 0, startY = 0;
+      let out = '';
+
+      while (i < tokens.length) {
+        let tok = tokens[i];
+        if (typeof tok === 'string') {
+          i++;
+          let cmd = tok;
+          let isRel = cmd === cmd.toLowerCase() && cmd !== 'z' && cmd !== 'Z';
+          let cUpper = cmd.toUpperCase();
+
+          if (cUpper === 'Z') {
+            out += 'Z';
+            curX = startX;
+            curY = startY;
+            continue;
+          }
+
+          while (i < tokens.length && typeof tokens[i] === 'number') {
+            if (cUpper === 'M' || cUpper === 'L') {
+              let x = tokens[i++], y = tokens[i++];
+              if (isRel) { x += curX; y += curY; }
+              curX = x; curY = y;
+              if (cUpper === 'M') { startX = x; startY = y; }
+              const [tx, ty] = pt(x, y);
+              out += (out ? ' ' : '') + (cUpper === 'M' ? 'M' : 'L') + `${tx},${ty}`;
+              cUpper = 'L';
+            } else if (cUpper === 'H') {
+              let x = tokens[i++];
+              if (isRel) x += curX;
+              curX = x;
+              const [tx, ty] = pt(x, curY);
+              out += (out ? ' ' : '') + 'L' + `${tx},${ty}`;
+            } else if (cUpper === 'V') {
+              let y = tokens[i++];
+              if (isRel) y += curY;
+              curY = y;
+              const [tx, ty] = pt(curX, y);
+              out += (out ? ' ' : '') + 'L' + `${tx},${ty}`;
+            } else if (cUpper === 'C') {
+              let x1 = tokens[i++], y1 = tokens[i++], x2 = tokens[i++], y2 = tokens[i++], x = tokens[i++], y = tokens[i++];
+              if (isRel) { x1 += curX; y1 += curY; x2 += curX; y2 += curY; x += curX; y += curY; }
+              curX = x; curY = y;
+              const [tx1, ty1] = pt(x1, y1);
+              const [tx2, ty2] = pt(x2, y2);
+              const [tx, ty] = pt(x, y);
+              out += (out ? ' ' : '') + `C${tx1},${ty1},${tx2},${ty2},${tx},${ty}`;
+            } else if (cUpper === 'S') {
+              let x2 = tokens[i++], y2 = tokens[i++], x = tokens[i++], y = tokens[i++];
+              if (isRel) { x2 += curX; y2 += curY; x += curX; y += curY; }
+              curX = x; curY = y;
+              const [tx2, ty2] = pt(x2, y2);
+              const [tx, ty] = pt(x, y);
+              out += (out ? ' ' : '') + `S${tx2},${ty2},${tx},${ty}`;
+            } else if (cUpper === 'Q') {
+              let x1 = tokens[i++], y1 = tokens[i++], x = tokens[i++], y = tokens[i++];
+              if (isRel) { x1 += curX; y1 += curY; x += curX; y += curY; }
+              curX = x; curY = y;
+              const [tx1, ty1] = pt(x1, y1);
+              const [tx, ty] = pt(x, y);
+              out += (out ? ' ' : '') + `Q${tx1},${ty1},${tx},${ty}`;
+            } else if (cUpper === 'T') {
+              let x = tokens[i++];
+              if (isRel) { x += curX; y += curY; }
+              curX = x; curY = y;
+              const [tx, ty] = pt(x, y);
+              out += (out ? ' ' : '') + `T${tx},${ty}`;
+            } else if (cUpper === 'A') {
+              let rx = tokens[i++], ry = tokens[i++], rot = tokens[i++], laf = tokens[i++], sf = tokens[i++], x = tokens[i++], y = tokens[i++];
+              if (isRel) { x += curX; y += curY; }
+              curX = x; curY = y;
+              const scaleX = Math.sqrt(ma * ma + mb * mb);
+              const scaleY = Math.sqrt(mc * mc + md * md);
+              const nrx = Math.round(rx * scaleX * 1000) / 1000;
+              const nry = Math.round(ry * scaleY * 1000) / 1000;
+              const matAngle = Math.atan2(mb, ma) * 180 / Math.PI;
+              const nrot = Math.round((rot + matAngle) * 100) / 100;
+              const det = ma * md - mb * mc;
+              const nsf = det < 0 ? (1 - sf) : sf;
+              const [tx, ty] = pt(x, y);
+              out += (out ? ' ' : '') + `A${nrx},${nry},${nrot},${laf},${nsf},${tx},${ty}`;
+            } else {
+              i++;
+            }
+          }
+        } else {
+          i++;
+        }
+      }
+      return out || d;
+    }
+
+    /* ════ COLLECT PATHS ═════════════════════════════════════════════════ */
+    const SKIP = new Set(['defs', 'symbol', 'metadata', 'title', 'desc', 'style', 'script', 'lineargradient', 'radialgradient', 'pattern', 'clippath', 'mask', 'filter', 'marker', 'use', 'image', 'text', 'tspan', 'textpath', 'switch']);
+    function collect(el, opts, out, rootSvg) {
+      const t = (el.localName || el.tagName || '').toLowerCase().replace(/^svg:/, '');
+      if (SKIP.has(t)) return;
+      const style = window.getComputedStyle(el);
+      if (style.display === 'none' || style.visibility === 'hidden') return;
+
+      if (['g', 'svg', 'a', 'marker'].includes(t)) {
+        const svgContext = rootSvg || (t === 'svg' ? el : null);
+        for (const c of el.children) collect(c, opts, out, svgContext);
+        return;
+      }
+
+      let pd = s2p(el);
+      if (!pd || !pd.trim()) return;
+
+      if (rootSvg) {
+        const m = getElementTransformMatrix(el, rootSvg);
+        pd = transformPathData(pd, m);
+      }
+
+      const fcRgba = parseCssColor(style.fill);
+      const scRgba = parseCssColor(style.stroke);
+      const fo = parseFloat(style.fillOpacity || 1);
+      const so = parseFloat(style.strokeOpacity || 1);
+      const op = parseFloat(style.opacity || 1);
+
+      const fc = fcRgba ? '#' + h2(fcRgba[0]) + h2(fcRgba[1]) + h2(fcRgba[2]) : null;
+      const fa = fcRgba ? parseFloat((fcRgba[3] * fo * op).toFixed(3)) : 1;
+
+      const sc = scRgba ? '#' + h2(scRgba[0]) + h2(scRgba[1]) + h2(scRgba[2]) : null;
+      const sa = scRgba ? parseFloat((scRgba[3] * so * op).toFixed(3)) : 1;
+
+      let sw2 = parseFloat(style.strokeWidth) || 0;
+      if (style.stroke !== 'none' && sc && !sw2) {
+        sw2 = 1;
+      }
+
+      let ft = 'nonZero';
+      if ((style.fillRule || '').trim().toLowerCase() === 'evenodd') {
+        ft = opts.fix ? 'nonZero' : 'evenOdd';
+      }
+
+      const slc = style.strokeLinecap || 'butt';
+      const slj = style.strokeLinejoin || 'miter';
+
+      out.push({ pd, fc, fa, sc, sa, sw: sw2, ft, slc, slj });
+    }
+
+    /* ════ CONVERT ═══════════════════════════════════════════════════════ */
+    function convert(svgText, opts) {
+      const wrapper = document.createElement('div');
+      wrapper.style.position = 'fixed';
+      wrapper.style.left = '-9999px';
+      wrapper.style.top = '-9999px';
+      wrapper.style.width = '1000px';
+      wrapper.style.height = '1000px';
+      wrapper.style.overflow = 'hidden';
+      wrapper.style.color = '#000000';
+      wrapper.innerHTML = svgText;
+      document.body.appendChild(wrapper);
+
+      const svg = wrapper.querySelector('svg');
+      if (!svg) {
+        document.body.removeChild(wrapper);
+        throw new Error('Invalid SVG file.');
+      }
+
+      let vbw = 0, vbh = 0;
+      const vb = svg.getAttribute('viewBox'); if (vb) { const p = vb.trim().split(/[\s,]+/).map(Number); vbw = p[2] || 0; vbh = p[3] || 0; }
+      const sw = parseFloat(svg.getAttribute('width')) || vbw || 24, sh = parseFloat(svg.getAttribute('height')) || vbh || 24;
+      if (!vbw) vbw = sw; if (!vbh) vbh = sh;
+      const outW = opts.w === 'auto' || !opts.w ? Math.round(sw) : (parseFloat(opts.w) || Math.round(sw));
+      const outH = opts.h === 'auto' || !opts.h ? Math.round(sh) : (parseFloat(opts.h) || Math.round(sh));
+
+      const paths = [];
+      collect(svg, { fix: opts.fix }, paths, svg);
+
+      document.body.removeChild(wrapper);
+
+      let xml = `<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"\n    android:viewportWidth="${vbw}"\n    android:viewportHeight="${vbh}"\n    android:width="${outW}dp"\n    android:height="${outH}dp">\n`;
+      for (const p of paths) {
+        const attrs = [];
+        attrs.push(`android:pathData="${xe(p.pd)}"`);
+        if (p.fc && p.fc !== '#00000000' && p.fa > 0) {
+          attrs.push(`android:fillColor="${p.fc}"`);
+          if (p.fa < 1) attrs.push(`android:fillAlpha="${p.fa}"`);
+        }
+        if (p.sc && p.sw > 0) {
+          attrs.push(`android:strokeColor="${p.sc}"`);
+          attrs.push(`android:strokeWidth="${p.sw}"`);
+          if (p.sa < 1) attrs.push(`android:strokeAlpha="${p.sa}"`);
+          if (p.slc !== 'butt') attrs.push(`android:strokeLineCap="${p.slc}"`);
+          if (p.slj !== 'miter') attrs.push(`android:strokeLineJoin="${p.slj}"`);
+        }
+        if (p.ft !== 'nonZero') attrs.push(`android:fillType="${p.ft}"`);
+        xml += `    <path\n        ` + attrs.join('\n        ') + ` />\n`;
+      }
+      xml += `</vector>`;
+      return { xml, n: paths.length, w: outW, h: outH, vw: vbw, vh: vbh };
+    }
+
+    /* ════ VD → PREVIEW SVG ══════════════════════════════════════════════ */
+    function getVdAttr(el, name) {
+      const ln = name.toLowerCase();
+      for (const attr of el.attributes) {
+        const aln = attr.localName.toLowerCase();
+        const an = attr.name.toLowerCase();
+        if (aln === ln || an === 'android:' + ln || an === ln) {
+          return attr.value;
+        }
+      }
+      return null;
+    }
+
+    function androidHexToWebColor(colorStr) {
+      if (!colorStr) return 'none';
+      colorStr = colorStr.trim();
+      if (colorStr === 'none' || colorStr === 'transparent' || colorStr === '#00000000') return 'none';
+      if (colorStr.startsWith('#') && colorStr.length === 9) {
+        // Android #AARRGGBB -> CSS rgba(r,g,b,a)
+        const a = parseInt(colorStr.slice(1, 3), 16) / 255;
+        const r = parseInt(colorStr.slice(3, 5), 16);
+        const g = parseInt(colorStr.slice(5, 7), 16);
+        const b = parseInt(colorStr.slice(7, 9), 16);
+        return `rgba(${r}, ${g}, ${b}, ${a.toFixed(3)})`;
+      }
+      return colorStr;
+    }
+
+    function vd2svg(vdXml) {
+      try {
+        const doc = new DOMParser().parseFromString(vdXml, 'application/xml');
+        const v = doc.documentElement; if (!v || v.tagName === 'parsererror') return null;
+        const vw = parseFloat(getVdAttr(v, 'viewportWidth')) || 24, vh = parseFloat(getVdAttr(v, 'viewportHeight')) || 24;
+        let s = '';
+        function walk(el) {
+          for (const c of el.children) {
+            const tag = (c.localName || c.tagName || '').toLowerCase();
+            if (tag === 'path') {
+              const d = getVdAttr(c, 'pathData') || '';
+              const fillAttr = getVdAttr(c, 'fillColor');
+              const fill = fillAttr ? androidHexToWebColor(fillAttr) : 'none';
+              const fillAlpha = getVdAttr(c, 'fillAlpha') || '1';
+              const stroke = androidHexToWebColor(getVdAttr(c, 'strokeColor') || 'none');
+              const strokeAlpha = getVdAttr(c, 'strokeAlpha') || '1';
+              const sw = getVdAttr(c, 'strokeWidth') || '0';
+              const slc = getVdAttr(c, 'strokeLineCap') || 'butt';
+              const slj = getVdAttr(c, 'strokeLineJoin') || 'miter';
+              const ft = getVdAttr(c, 'fillType');
+              const fr = ft === 'evenOdd' ? 'evenodd' : 'nonzero';
+              s += `<path d="${he(d)}" fill="${he(fill)}" fill-opacity="${fillAlpha}"`;
+              if (stroke !== 'none' && parseFloat(sw) > 0) {
+                s += ` stroke="${he(stroke)}" stroke-width="${sw}" stroke-opacity="${strokeAlpha}"`;
+                if (slc !== 'butt') s += ` stroke-linecap="${slc}"`;
+                if (slj !== 'miter') s += ` stroke-linejoin="${slj}"`;
+              }
+              s += ` fill-rule="${fr}"/>`;
+            } else if (tag === 'group') {
+              walk(c);
+            }
+          }
+        }
+        walk(v);
+        return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${vw} ${vh}" style="max-height:115px;max-width:100%;display:block">${s}</svg>`;
+      } catch { return null; }
+    }
+
+    /* ════ UTILS ═════════════════════════════════════════════════════════ */
+    function xe(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function he(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function hl(xml) {
+      if (!xml) return '';
+      const safe = String(xml).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return safe.replace(/(&lt;\/?[a-zA-Z0-9_:-]+)|(\/&gt;|&gt;)|([a-zA-Z0-9_:-]+)(?=\s*=)|("[\s\S]*?"|'[\s\S]*?')/g, function (match, tag, endTag, attr, val) {
+        if (tag) return `<span class="xt">${tag}</span>`;
+        if (endTag) return `<span class="xt">${endTag}</span>`;
+        if (attr) return `<span class="xa">${attr}</span>`;
+        if (val) return `<span class="xv">${val}</span>`;
+        return match;
+      });
+    }
+    function now() { const d = new Date(); return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0'); }
+
+    /* ════ STATE ═════════════════════════════════════════════════════════ */
+    let store = [], active = -1;
+    function opts() { return { w: document.getElementById('optW').value.trim().toLowerCase(), h: document.getElementById('optH').value.trim().toLowerCase(), fix: document.getElementById('optFix').checked }; }
+
+    /* ════ PROCESS ═══════════════════════════════════════════════════════ */
+    async function run(files) {
+      const list = Array.from(files).filter(f => f.name.match(/\.svg$/i) || f.type === 'image/svg+xml');
+      if (!list.length) { alert('Please select .svg files.'); return; }
+      const o = opts();
+      for (const f of list) {
+        try {
+          const res = convert(await f.text(), o);
+          store.push({ ok: true, name: f.name.replace(/\.svg$/i, '.xml'), xml: res.xml, svg: vd2svg(res.xml), n: res.n, w: res.w, h: res.h, vw: res.vw, vh: res.vh, t: now() });
+        } catch (e) {
+          store.push({ ok: false, name: f.name, err: e.message, t: now() });
+        }
+      }
+      renderList();
+      selectItem(store.length - 1);
+    }
+
+    /* ════ RENDER LIST ════════════════════════════════════════════════════ */
+    function renderList() {
+      const box = document.getElementById('flist');
+      const histCard = document.getElementById('historyCard');
+      if (!store.length) {
+        histCard.style.display = 'none';
+        document.getElementById('resultPanel').style.display = 'none';
+        document.getElementById('emptyState').style.display = 'flex';
+        return;
+      }
+      histCard.style.display = 'block';
+      box.innerHTML = '';
+      store.forEach((r, i) => {
+        const el = document.createElement('div');
+        el.className = 'fi' + (i === active ? ' sel' : '');
+        el.innerHTML = `<div class="fi-dot${r.ok ? '' : ' er'}"></div><div class="fi-body"><div class="fi-name">${he(r.name)}</div><div class="fi-sub">${he(r.ok ? `${r.n} path${r.n !== 1 ? 's' : ''} · ${r.w}×${r.h}dp` : r.err.slice(0, 32))}</div></div><div class="fi-time">${r.t}</div><button class="fi-del" title="Remove item">×</button>`;
+        el.onclick = (e) => {
+          if (e.target.closest('.fi-del')) return;
+          selectItem(i);
+        };
+        const delBtn = el.querySelector('.fi-del');
+        delBtn.onclick = (e) => {
+          e.stopPropagation();
+          removeHistoryItem(i);
+        };
+        box.appendChild(el);
+      });
+    }
+
+    function removeHistoryItem(i) {
+      store.splice(i, 1);
+      if (!store.length) {
+        active = -1;
+        renderList();
+      } else {
+        active = Math.min(active, store.length - 1);
+        selectItem(active);
+      }
+    }
+
+    /* ════ SELECT ════════════════════════════════════════════════════════ */
+    function selectItem(i) {
+      active = i;
+      renderList();
+      const r = store[i];
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('resultPanel').style.display = 'block';
+      document.getElementById('dTitle').textContent = r.name;
+      const st = document.getElementById('dStatus');
+      if (r.ok) {
+        st.textContent = 'Converted'; st.className = 'tag t-ok';
+        document.getElementById('dPaths').textContent = `${r.n} path${r.n !== 1 ? 's' : ''}`;
+        document.getElementById('dSize').textContent = `${r.w}×${r.h}dp`;
+        document.getElementById('dVP').textContent = `${r.vw}×${r.vh}`;
+        document.getElementById('prevBox').innerHTML = r.svg || '<span style="color:var(--tx3);font-size:.72rem">No preview</span>';
+        document.getElementById('xmlCode').innerHTML = hl(r.xml);
+      } else {
+        st.textContent = 'Error'; st.className = 'tag t-er';
+        document.getElementById('dPaths').textContent = '—';
+        document.getElementById('dSize').textContent = '—';
+        document.getElementById('dVP').textContent = '—';
+        document.getElementById('prevBox').innerHTML = `<span style="color:#f87171;font-size:.78rem">${he(r.err)}</span>`;
+        document.getElementById('xmlCode').textContent = '';
+      }
+    }
+
+    /* ════ PREVIEW BG ════════════════════════════════════════════════════ */
+    document.querySelector('.pfooter').addEventListener('click', e => {
+      const btn = e.target.closest('.bgb'); if (!btn) return;
+      document.getElementById('prevBox').className = 'pbox ' + btn.dataset.bg;
+      document.querySelectorAll('.bgb').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+    });
+
+    /* ════ ACTIONS ═══════════════════════════════════════════════════════ */
+    document.getElementById('xmlCopy').onclick = () => {
+      if (active < 0 || !store[active].ok) return;
+      navigator.clipboard.writeText(store[active].xml).then(() => {
+        const b = document.getElementById('xmlCopy'); const t = b.textContent; b.textContent = 'Copied!'; setTimeout(() => b.textContent = t, 2000);
+      });
+    };
+    document.getElementById('xmlDl').onclick = () => dl(active);
+    function dl(i) {
+      if (i < 0 || !store[i].ok) return;
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([store[i].xml], { type: 'application/xml' })); a.download = store[i].name; a.click();
+    }
+
+    /* ════ ZIP GENERATION ═════════════════════════════════════════════════ */
+    function createZip(files) {
+      const encoder = new TextEncoder();
+      const fileEntries = [];
+      let offset = 0;
+
+      const crcTable = new Uint32Array(256);
+      for (let i = 0; i < 256; i++) {
+        let c = i;
+        for (let k = 0; k < 8; k++) {
+          c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        }
+        crcTable[i] = c;
+      }
+
+      function crc32(bytes) {
+        let crc = 0xFFFFFFFF;
+        for (let i = 0; i < bytes.length; i++) {
+          crc = (crc >>> 8) ^ crcTable[(crc ^ bytes[i]) & 0xFF];
+        }
+        return (crc ^ 0xFFFFFFFF) >>> 0;
+      }
+
+      const parts = [];
+
+      for (const f of files) {
+        const nameBytes = encoder.encode(f.name);
+        const contentBytes = encoder.encode(f.content);
+        const crc = crc32(contentBytes);
+        const size = contentBytes.length;
+        const headerOffset = offset;
+
+        const lh = new Uint8Array(30 + nameBytes.length);
+        const dv = new DataView(lh.buffer);
+        dv.setUint32(0, 0x04034b50, true);
+        dv.setUint16(4, 20, true);
+        dv.setUint16(6, 0, true);
+        dv.setUint16(8, 0, true);
+        dv.setUint16(10, 0, true);
+        dv.setUint16(12, 0, true);
+        dv.setUint32(14, crc, true);
+        dv.setUint32(18, size, true);
+        dv.setUint32(22, size, true);
+        dv.setUint16(26, nameBytes.length, true);
+        dv.setUint16(28, 0, true);
+        lh.set(nameBytes, 30);
+
+        parts.push(lh);
+        parts.push(contentBytes);
+
+        fileEntries.push({ nameBytes, crc, size, offset: headerOffset });
+        offset += lh.length + contentBytes.length;
+      }
+
+      const cdStart = offset;
+      let cdSize = 0;
+
+      for (const entry of fileEntries) {
+        const cdh = new Uint8Array(46 + entry.nameBytes.length);
+        const dv = new DataView(cdh.buffer);
+        dv.setUint32(0, 0x02014b50, true);
+        dv.setUint16(4, 20, true);
+        dv.setUint16(6, 20, true);
+        dv.setUint16(8, 0, true);
+        dv.setUint16(10, 0, true);
+        dv.setUint16(12, 0, true);
+        dv.setUint16(14, 0, true);
+        dv.setUint32(16, entry.crc, true);
+        dv.setUint32(20, entry.size, true);
+        dv.setUint32(24, entry.size, true);
+        dv.setUint16(28, entry.nameBytes.length, true);
+        dv.setUint16(30, 0, true);
+        dv.setUint16(32, 0, true);
+        dv.setUint16(34, 0, true);
+        dv.setUint16(36, 0, true);
+        dv.setUint32(38, 0, true);
+        dv.setUint32(42, entry.offset, true);
+        cdh.set(entry.nameBytes, 46);
+
+        parts.push(cdh);
+        offset += cdh.length;
+        cdSize += cdh.length;
+      }
+
+      const eocd = new Uint8Array(22);
+      const dv = new DataView(eocd.buffer);
+      dv.setUint32(0, 0x06054b50, true);
+      dv.setUint16(4, 0, true);
+      dv.setUint16(6, 0, true);
+      dv.setUint16(8, fileEntries.length, true);
+      dv.setUint16(10, fileEntries.length, true);
+      dv.setUint32(12, cdSize, true);
+      dv.setUint32(16, cdStart, true);
+      dv.setUint16(20, 0, true);
+      parts.push(eocd);
+
+      return new Blob(parts, { type: 'application/zip' });
+    }
+
+    document.getElementById('dlZipBtn').onclick = () => {
+      const validFiles = store.filter(r => r.ok).map(r => ({ name: r.name, content: r.xml }));
+      if (!validFiles.length) {
+        alert('No converted XML files available to download.');
+        return;
+      }
+      const zipBlob = createZip(validFiles);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(zipBlob);
+      a.download = 'vectroid_vectors.zip';
+      a.click();
+
+      const b = document.getElementById('dlZipBtn');
+      const oldHtml = b.innerHTML;
+      b.innerHTML = '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Downloaded!</span>';
+      setTimeout(() => b.innerHTML = oldHtml, 2000);
+    };
+
+    document.getElementById('clearBtn').onclick = () => {
+      if (!store.length) return;
+      store = [];
+      active = -1;
+      renderList();
+    };
+
+    // Theme Toggle Logic
+    const themeBtn = document.getElementById('themeToggle');
+    const sunIcon = themeBtn.querySelector('.sun-icon');
+    const moonIcon = themeBtn.querySelector('.moon-icon');
+
+    function updateThemeIcons(isDark) {
+      if (isDark) {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      } else {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      }
+    }
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {
+      document.body.classList.remove('theme-dark');
+      document.body.classList.add('theme-light');
+      updateThemeIcons(false);
+    } else {
+      document.body.classList.remove('theme-light');
+      document.body.classList.add('theme-dark');
+      updateThemeIcons(true);
+    }
+
+    themeBtn.onclick = () => {
+      let isDark = document.body.classList.contains('theme-dark');
+      if (isDark) {
+        document.body.classList.remove('theme-dark');
+        document.body.classList.add('theme-light');
+        localStorage.setItem('theme', 'light');
+        updateThemeIcons(false);
+      } else {
+        document.body.classList.remove('theme-light');
+        document.body.classList.add('theme-dark');
+        localStorage.setItem('theme', 'dark');
+        updateThemeIcons(true);
+      }
+    };
+
+    /* ════ FILE INPUT / DRAG DROP ════════════════════════════════════════ */
+    const fi = document.getElementById('fi');
+    fi.onchange = () => { if (fi.files.length) run(fi.files); fi.value = ''; };
+
+    function openFile() { fi.click(); }
+    document.getElementById('addBtn').onclick = openFile;
+    document.getElementById('browseBtn').onclick = openFile;
+
+    // Drag & drop on the whole right area
+    const rightPanel = document.querySelector('.workspace-right');
+    window.addEventListener('dragover', e => { e.preventDefault(); document.getElementById('dropArea').classList.add('over'); });
+    window.addEventListener('dragleave', e => { if (e.target === document.documentElement) document.getElementById('dropArea').classList.remove('over'); });
+    window.addEventListener('drop', e => { e.preventDefault(); document.getElementById('dropArea').classList.remove('over'); if (e.dataTransfer.files.length) run(e.dataTransfer.files); });
+
+    // Init
     renderList();
-  } else {
-    active = Math.min(active, store.length - 1);
-    selectItem(active);
-  }
-}
-
-/* ════ SELECT ════════════════════════════════════════════════════════ */
-function selectItem(i){
-  active=i;
-  renderList();
-  const r=store[i];
-  document.getElementById('emptyState').style.display='none';
-  document.getElementById('resultPanel').style.display='block';
-  document.getElementById('dTitle').textContent=r.name;
-  const st=document.getElementById('dStatus');
-  if(r.ok){
-    st.textContent='Converted';st.className='tag t-ok';
-    document.getElementById('dPaths').textContent=`${r.n} path${r.n!==1?'s':''}`;
-    document.getElementById('dSize').textContent=`${r.w}×${r.h}dp`;
-    document.getElementById('dVP').textContent=`${r.vw}×${r.vh}`;
-    document.getElementById('prevBox').innerHTML=r.svg||'<span style="color:var(--tx3);font-size:.72rem">No preview</span>';
-    document.getElementById('xmlCode').innerHTML=hl(r.xml);
-  }else{
-    st.textContent='Error';st.className='tag t-er';
-    document.getElementById('dPaths').textContent='—';
-    document.getElementById('dSize').textContent='—';
-    document.getElementById('dVP').textContent='—';
-    document.getElementById('prevBox').innerHTML=`<span style="color:#f87171;font-size:.78rem">${he(r.err)}</span>`;
-    document.getElementById('xmlCode').textContent='';
-  }
-}
-
-/* ════ PREVIEW BG ════════════════════════════════════════════════════ */
-document.querySelector('.pfooter').addEventListener('click',e=>{
-  const btn=e.target.closest('.bgb');if(!btn) return;
-  document.getElementById('prevBox').className='pbox '+btn.dataset.bg;
-  document.querySelectorAll('.bgb').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-});
-
-/* ════ ACTIONS ═══════════════════════════════════════════════════════ */
-document.getElementById('xmlCopy').onclick=()=>{
-  if(active<0||!store[active].ok) return;
-  navigator.clipboard.writeText(store[active].xml).then(()=>{
-    const b=document.getElementById('xmlCopy');const t=b.textContent;b.textContent='Copied!';setTimeout(()=>b.textContent=t,2000);
-  });
-};
-document.getElementById('xmlDl').onclick=()=>dl(active);
-function dl(i){
-  if(i<0||!store[i].ok) return;
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([store[i].xml],{type:'application/xml'}));a.download=store[i].name;a.click();
-}
-
-/* ════ ZIP GENERATION ═════════════════════════════════════════════════ */
-function createZip(files) {
-  const encoder = new TextEncoder();
-  const fileEntries = [];
-  let offset = 0;
-
-  const crcTable = new Uint32Array(256);
-  for (let i = 0; i < 256; i++) {
-    let c = i;
-    for (let k = 0; k < 8; k++) {
-      c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
-    }
-    crcTable[i] = c;
-  }
-
-  function crc32(bytes) {
-    let crc = 0xFFFFFFFF;
-    for (let i = 0; i < bytes.length; i++) {
-      crc = (crc >>> 8) ^ crcTable[(crc ^ bytes[i]) & 0xFF];
-    }
-    return (crc ^ 0xFFFFFFFF) >>> 0;
-  }
-
-  const parts = [];
-
-  for (const f of files) {
-    const nameBytes = encoder.encode(f.name);
-    const contentBytes = encoder.encode(f.content);
-    const crc = crc32(contentBytes);
-    const size = contentBytes.length;
-    const headerOffset = offset;
-
-    const lh = new Uint8Array(30 + nameBytes.length);
-    const dv = new DataView(lh.buffer);
-    dv.setUint32(0, 0x04034b50, true);
-    dv.setUint16(4, 20, true);
-    dv.setUint16(6, 0, true);
-    dv.setUint16(8, 0, true);
-    dv.setUint16(10, 0, true);
-    dv.setUint16(12, 0, true);
-    dv.setUint32(14, crc, true);
-    dv.setUint32(18, size, true);
-    dv.setUint32(22, size, true);
-    dv.setUint16(26, nameBytes.length, true);
-    dv.setUint16(28, 0, true);
-    lh.set(nameBytes, 30);
-
-    parts.push(lh);
-    parts.push(contentBytes);
-
-    fileEntries.push({ nameBytes, crc, size, offset: headerOffset });
-    offset += lh.length + contentBytes.length;
-  }
-
-  const cdStart = offset;
-  let cdSize = 0;
-
-  for (const entry of fileEntries) {
-    const cdh = new Uint8Array(46 + entry.nameBytes.length);
-    const dv = new DataView(cdh.buffer);
-    dv.setUint32(0, 0x02014b50, true);
-    dv.setUint16(4, 20, true);
-    dv.setUint16(6, 20, true);
-    dv.setUint16(8, 0, true);
-    dv.setUint16(10, 0, true);
-    dv.setUint16(12, 0, true);
-    dv.setUint16(14, 0, true);
-    dv.setUint32(16, entry.crc, true);
-    dv.setUint32(20, entry.size, true);
-    dv.setUint32(24, entry.size, true);
-    dv.setUint16(28, entry.nameBytes.length, true);
-    dv.setUint16(30, 0, true);
-    dv.setUint16(32, 0, true);
-    dv.setUint16(34, 0, true);
-    dv.setUint16(36, 0, true);
-    dv.setUint32(38, 0, true);
-    dv.setUint32(42, entry.offset, true);
-    cdh.set(entry.nameBytes, 46);
-
-    parts.push(cdh);
-    offset += cdh.length;
-    cdSize += cdh.length;
-  }
-
-  const eocd = new Uint8Array(22);
-  const dv = new DataView(eocd.buffer);
-  dv.setUint32(0, 0x06054b50, true);
-  dv.setUint16(4, 0, true);
-  dv.setUint16(6, 0, true);
-  dv.setUint16(8, fileEntries.length, true);
-  dv.setUint16(10, fileEntries.length, true);
-  dv.setUint32(12, cdSize, true);
-  dv.setUint32(16, cdStart, true);
-  dv.setUint16(20, 0, true);
-  parts.push(eocd);
-
-  return new Blob(parts, { type: 'application/zip' });
-}
-
-document.getElementById('dlZipBtn').onclick = () => {
-  const validFiles = store.filter(r => r.ok).map(r => ({ name: r.name, content: r.xml }));
-  if (!validFiles.length) {
-    alert('No converted XML files available to download.');
-    return;
-  }
-  const zipBlob = createZip(validFiles);
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(zipBlob);
-  a.download = 'vectroid_vectors.zip';
-  a.click();
-
-  const b = document.getElementById('dlZipBtn');
-  const oldHtml = b.innerHTML;
-  b.innerHTML = '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Downloaded!</span>';
-  setTimeout(() => b.innerHTML = oldHtml, 2000);
-};
-
-document.getElementById('clearBtn').onclick = () => {
-  if (!store.length) return;
-  store = [];
-  active = -1;
-  renderList();
-};
-
-// Theme Toggle Logic
-const themeBtn = document.getElementById('themeToggle');
-const sunIcon = themeBtn.querySelector('.sun-icon');
-const moonIcon = themeBtn.querySelector('.moon-icon');
-
-function updateThemeIcons(isDark) {
-  if (isDark) {
-    sunIcon.style.display = 'block';
-    moonIcon.style.display = 'none';
-  } else {
-    sunIcon.style.display = 'none';
-    moonIcon.style.display = 'block';
-  }
-}
-
-// Load saved theme
-const savedTheme = localStorage.getItem('theme') || 'dark';
-if (savedTheme === 'light') {
-  document.body.classList.remove('theme-dark');
-  document.body.classList.add('theme-light');
-  updateThemeIcons(false);
-} else {
-  document.body.classList.remove('theme-light');
-  document.body.classList.add('theme-dark');
-  updateThemeIcons(true);
-}
-
-themeBtn.onclick = () => {
-  let isDark = document.body.classList.contains('theme-dark');
-  if (isDark) {
-    document.body.classList.remove('theme-dark');
-    document.body.classList.add('theme-light');
-    localStorage.setItem('theme', 'light');
-    updateThemeIcons(false);
-  } else {
-    document.body.classList.remove('theme-light');
-    document.body.classList.add('theme-dark');
-    localStorage.setItem('theme', 'dark');
-    updateThemeIcons(true);
-  }
-};
-
-/* ════ FILE INPUT / DRAG DROP ════════════════════════════════════════ */
-const fi=document.getElementById('fi');
-fi.onchange=()=>{if(fi.files.length)run(fi.files);fi.value='';};
-
-function openFile(){fi.click();}
-document.getElementById('addBtn').onclick=openFile;
-document.getElementById('browseBtn').onclick=openFile;
-
-// Drag & drop on the whole right area
-const rightPanel = document.querySelector('.workspace-right');
-window.addEventListener('dragover',e=>{e.preventDefault();document.getElementById('dropArea').classList.add('over');});
-window.addEventListener('dragleave',e=>{if(e.target===document.documentElement)document.getElementById('dropArea').classList.remove('over');});
-window.addEventListener('drop',e=>{e.preventDefault();document.getElementById('dropArea').classList.remove('over');if(e.dataTransfer.files.length)run(e.dataTransfer.files);});
-
-// Init
-renderList();
-</script>
+  </script>
 </body>
+
 </html>
