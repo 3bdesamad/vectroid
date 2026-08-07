@@ -263,7 +263,7 @@
 
     /* Drop Area */
     .drop-area {
-      border: 2px dashed var(--bd2);
+      border: 1px dashed var(--bd2);
       border-radius: 6px;
       padding: 2.2rem 1.5rem;
       text-align: center;
@@ -391,22 +391,69 @@
     .checkbox-container {
       display: flex;
       align-items: center;
-      gap: .5rem;
+      gap: 10px;
       cursor: pointer;
-      padding: .3rem 0
+      padding: 0.4rem 0;
+      user-select: none;
+      transition: color 0.15s ease;
     }
 
-    .checkbox-container input {
-      accent-color: var(--ac);
+    .checkbox-container:hover span {
+      color: var(--tx);
+    }
+
+    .checkbox-container input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
       width: 16px;
       height: 16px;
-      cursor: pointer
+      border: 1px solid var(--bd2);
+      border-radius: 4px;
+      background: var(--bg);
+      cursor: pointer;
+      outline: none;
+      display: grid;
+      place-content: center;
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      flex-shrink: 0;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .checkbox-container input[type="checkbox"]::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      transform: scale(0);
+      transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      background-color: #ffffff;
+      clip-path: polygon(14% 44%, 0 65%, 42% 100%, 100% 16%, 80% 0%, 38% 62%);
+    }
+
+    .checkbox-container input[type="checkbox"]:hover {
+      border-color: var(--ac);
+      background: var(--sf2);
+    }
+
+    .checkbox-container input[type="checkbox"]:checked {
+      background: var(--ac);
+      border-color: var(--ac);
+      box-shadow: 0 2px 8px rgba(28, 144, 219, 0.3);
+    }
+
+    .checkbox-container input[type="checkbox"]:checked::before {
+      transform: scale(1);
+    }
+
+    .checkbox-container input[type="checkbox"]:focus-visible {
+      box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--ac);
     }
 
     .checkbox-container span {
       font-size: 0.82rem;
       color: var(--tx2);
-      font-weight: 500
+      font-weight: 500;
+      line-height: 1.3;
+      transition: color 0.14s ease;
     }
 
     /* Converted File List */
@@ -796,6 +843,33 @@
       color: #fbbf24
     }
 
+    .warn-card {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.28);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.2rem;
+      font-size: 0.78rem;
+      color: #f59e0b;
+    }
+
+    .warn-card-header {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.7rem;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .warn-list {
+      margin: 0;
+      padding-left: 1.2rem;
+      line-height: 1.5;
+    }
+
     #fi {
       display: none
     }
@@ -849,7 +923,7 @@
           <div class="drop-area" id="dropArea">
             <div class="drop-ico">📂</div>
             <div class="drop-t">Drop SVG files here</div>
-            <div class="drop-s">or drag anywhere on the page</div>
+            <div class="drop-s">or drag / paste (Ctrl+V) anywhere</div>
             <button class="btn btn-primary" id="browseBtn">Choose SVG Files</button>
           </div>
         </div>
@@ -871,9 +945,21 @@
               <input class="form-input" type="text" id="optH" value="auto" placeholder="auto">
             </div>
           </div>
-          <label class="checkbox-container" style="margin-top: 1.2rem;">
+          <label class="checkbox-container" style="margin-top: 1rem;">
             <input type="checkbox" id="optFix">
             <span>Fix fill type (evenodd → nonzero)</span>
+          </label>
+          <label class="checkbox-container">
+            <input type="checkbox" id="optName">
+            <span>Import SVG IDs as android:name</span>
+          </label>
+          <label class="checkbox-container">
+            <input type="checkbox" id="optClip">
+            <span>Enable support for clip-path</span>
+          </label>
+          <label class="checkbox-container">
+            <input type="checkbox" id="optWrap">
+            <span>Word-wrap pathData (80 cols)</span>
           </label>
         </div>
       </div>
@@ -902,7 +988,8 @@
       <div class="empty-state" id="emptyState">
         <div class="empty-state-icon">⚡</div>
         <h2>Vectroid Converter</h2>
-        <p>Upload one or more SVG files to start. The generated VectorDrawable XML and live previews will render here in
+        <p>Upload or paste (Ctrl+V) one or more SVG files to start. The generated VectorDrawable XML and live previews
+          will render here in
           real-time.</p>
       </div>
 
@@ -944,6 +1031,9 @@
               <div class="meta-item"><strong>Size:</strong> <span id="dSize">—</span></div>
               <div class="meta-item"><strong>Viewport:</strong> <span id="dVP">—</span></div>
             </div>
+
+            <!-- Diagnostics / Warning Banner Container -->
+            <div id="warnBox" style="display: none;"></div>
 
             <div class="sec-label">Preview</div>
             <div class="preview-block">
@@ -1112,7 +1202,7 @@
             }
           }
         }
-      } catch (e) {}
+      } catch (e) { }
 
       let matrix = [1, 0, 0, 1, 0, 0];
       let curr = el;
@@ -1240,17 +1330,114 @@
       return out || d;
     }
 
+    /* ════ ADVANCED PRE-PROCESSING & HELPERS ═════════════════════════════ */
+    function preprocessUseTags(svg) {
+      const uses = Array.from(svg.querySelectorAll('use'));
+      for (const u of uses) {
+        let href = u.getAttribute('href') || u.getAttribute('xlink:href');
+        if (!href || !href.startsWith('#')) continue;
+        const targetId = href.slice(1);
+        try {
+          const targetEl = svg.querySelector(`[id="${CSS.escape(targetId)}"]`);
+          if (targetEl) {
+            const clone = targetEl.cloneNode(true);
+            clone.removeAttribute('id');
+            for (const attr of u.attributes) {
+              if (attr.name !== 'href' && attr.name !== 'xlink:href' && attr.name !== 'id') {
+                clone.setAttribute(attr.name, attr.value);
+              }
+            }
+            const x = parseFloat(u.getAttribute('x') || 0);
+            const y = parseFloat(u.getAttribute('y') || 0);
+            if (x || y) {
+              const existingT = clone.getAttribute('transform') || '';
+              clone.setAttribute('transform', `translate(${x}, ${y}) ${existingT}`);
+            }
+            if (u.parentNode) {
+              u.parentNode.replaceChild(clone, u);
+            }
+          }
+        } catch (e) { }
+      }
+    }
+
+    function sanitizeName(idStr) {
+      if (!idStr) return null;
+      let s = idStr.trim().toLowerCase().replace(/[^a-z0-9_]/g, '_');
+      if (/^[0-9]/.test(s)) s = '_' + s;
+      return s || null;
+    }
+
+    function wordWrapPathData(d, maxLen = 80) {
+      if (!d || d.length <= maxLen) return xe(d);
+      const regex = new RegExp('.{1,' + maxLen + '}(\\s|$)|\\S+?(\\s|$)', 'g');
+      const matches = d.match(regex);
+      if (!matches) return xe(d);
+      return matches.map(m => xe(m.trim())).filter(Boolean).join('\n        ');
+    }
+
+    function collectClipPaths(svg, rootSvg) {
+      const clipMap = {};
+      const clipEls = svg.querySelectorAll('clipPath');
+      for (const cp of clipEls) {
+        const id = cp.getAttribute('id');
+        if (!id) continue;
+        const clipPaths = [];
+        for (const child of cp.children) {
+          let pd = s2p(child);
+          if (pd && pd.trim()) {
+            if (rootSvg) {
+              const m = getElementTransformMatrix(child, rootSvg);
+              pd = transformPathData(pd, m);
+            }
+            clipPaths.push(pd);
+          }
+        }
+        if (clipPaths.length) {
+          clipMap[id] = { pd: clipPaths.join(' '), name: sanitizeName(id) };
+        }
+      }
+      return clipMap;
+    }
+
     /* ════ COLLECT PATHS ═════════════════════════════════════════════════ */
-    const SKIP = new Set(['defs', 'symbol', 'metadata', 'title', 'desc', 'style', 'script', 'lineargradient', 'radialgradient', 'pattern', 'clippath', 'mask', 'filter', 'marker', 'use', 'image', 'text', 'tspan', 'textpath', 'switch']);
-    function collect(el, opts, out, rootSvg) {
+    const SKIP = new Set(['defs', 'symbol', 'metadata', 'title', 'desc', 'style', 'script', 'lineargradient', 'radialgradient', 'pattern', 'clippath', 'mask', 'filter', 'marker', 'use', 'switch']);
+
+    function collect(el, opts, out, rootSvg, clipMap, appliedClips, warnings) {
       const t = (el.localName || el.tagName || '').toLowerCase().replace(/^svg:/, '');
+
+      // Diagnostics for unsupported text/image elements
+      if (['text', 'tspan', 'textpath'].includes(t)) {
+        if (warnings) warnings.add('Text elements (<text>) found — text cannot be directly rendered in VectorDrawables, please convert text to paths in your vector editor.');
+        return;
+      }
+      if (t === 'image') {
+        if (warnings) warnings.add('Raster image (<image>) found — raster images are not supported in VectorDrawable XML.');
+        return;
+      }
+
       if (SKIP.has(t)) return;
       const style = window.getComputedStyle(el);
       if (style.display === 'none' || style.visibility === 'hidden') return;
 
+      // Check clip-path attribute/style
+      const clipAttr = el.getAttribute('clip-path') || style.clipPath;
+      if (clipAttr && clipAttr !== 'none') {
+        const match = clipAttr.match(/#([^\s"')->]+)/);
+        if (match) {
+          const clipId = match[1];
+          if (opts.clip && clipMap && clipMap[clipId] && !appliedClips.has(clipId)) {
+            appliedClips.add(clipId);
+            out.push({ isClip: true, pd: clipMap[clipId].pd, name: opts.name ? clipMap[clipId].name : null });
+          } else if (!opts.clip && warnings) {
+            warnings.add('clip-path detected in SVG — enable "Enable support for clip-path" in Settings to convert clip masks.');
+          }
+        }
+      }
+
       if (['g', 'svg', 'a', 'marker'].includes(t)) {
         const svgContext = rootSvg || (t === 'svg' ? el : null);
-        for (const c of el.children) collect(c, opts, out, svgContext);
+        for (const c of el.children) collect(c, opts, out, svgContext, clipMap, appliedClips, warnings);
         return;
       }
 
@@ -1260,6 +1447,16 @@
       if (rootSvg) {
         const m = getElementTransformMatrix(el, rootSvg);
         pd = transformPathData(pd, m);
+      }
+
+      // Check for scientific E notation numbers
+      if (/-?\d*\.?\d+e[+-]?\d+/i.test(pd) && warnings) {
+        warnings.add('Scientific E-notation numbers found in pathData — may cause rendering glitches on some older Android versions.');
+      }
+
+      // Check for url() fills/strokes (gradients/patterns)
+      if ((style.fill.includes('url(') || style.stroke.includes('url(')) && warnings) {
+        warnings.add('Gradient or pattern (url(...)) detected — gradients are not supported in standard VectorDrawable paths.');
       }
 
       const fcRgba = parseCssColor(style.fill);
@@ -1281,13 +1478,17 @@
 
       let ft = 'nonZero';
       if ((style.fillRule || '').trim().toLowerCase() === 'evenodd') {
+        if (!opts.fix && warnings) {
+          warnings.add('fill-rule="evenodd" detected — requires Android API 24 (Nougat) or higher, unless "Fix fill type" is checked.');
+        }
         ft = opts.fix ? 'nonZero' : 'evenOdd';
       }
 
       const slc = style.strokeLinecap || 'butt';
       const slj = style.strokeLinejoin || 'miter';
+      const name = opts.name ? sanitizeName(el.getAttribute('id')) : null;
 
-      out.push({ pd, fc, fa, sc, sa, sw: sw2, ft, slc, slj });
+      out.push({ isClip: false, pd, fc, fa, sc, sa, sw: sw2, ft, slc, slj, name });
     }
 
     /* ════ CONVERT ═══════════════════════════════════════════════════════ */
@@ -1309,6 +1510,8 @@
         throw new Error('Invalid SVG file.');
       }
 
+      preprocessUseTags(svg);
+
       let vbw = 0, vbh = 0;
       const vb = svg.getAttribute('viewBox'); if (vb) { const p = vb.trim().split(/[\s,]+/).map(Number); vbw = p[2] || 0; vbh = p[3] || 0; }
       const sw = parseFloat(svg.getAttribute('width')) || vbw || 24, sh = parseFloat(svg.getAttribute('height')) || vbh || 24;
@@ -1317,30 +1520,47 @@
       const outH = opts.h === 'auto' || !opts.h ? Math.round(sh) : (parseFloat(opts.h) || Math.round(sh));
 
       const paths = [];
-      collect(svg, { fix: opts.fix }, paths, svg);
+      const warningsSet = new Set();
+      const clipMap = opts.clip ? collectClipPaths(svg, svg) : {};
+      const appliedClips = new Set();
+
+      collect(svg, opts, paths, svg, clipMap, appliedClips, warningsSet);
 
       document.body.removeChild(wrapper);
 
       let xml = `<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"\n    android:viewportWidth="${vbw}"\n    android:viewportHeight="${vbh}"\n    android:width="${outW}dp"\n    android:height="${outH}dp">\n`;
+
+      let pathCount = 0;
       for (const p of paths) {
-        const attrs = [];
-        attrs.push(`android:pathData="${xe(p.pd)}"`);
-        if (p.fc && p.fc !== '#00000000' && p.fa > 0) {
-          attrs.push(`android:fillColor="${p.fc}"`);
-          if (p.fa < 1) attrs.push(`android:fillAlpha="${p.fa}"`);
+        if (p.isClip) {
+          const formattedPd = opts.wrap ? wordWrapPathData(p.pd) : xe(p.pd);
+          const attrs = [];
+          if (p.name) attrs.push(`android:name="${p.name}"`);
+          attrs.push(`android:pathData="${formattedPd}"`);
+          xml += `    <clip-path\n        ` + attrs.join('\n        ') + ` />\n`;
+        } else {
+          pathCount++;
+          const formattedPd = opts.wrap ? wordWrapPathData(p.pd) : xe(p.pd);
+          const attrs = [];
+          if (p.name) attrs.push(`android:name="${p.name}"`);
+          attrs.push(`android:pathData="${formattedPd}"`);
+          if (p.fc && p.fc !== '#00000000' && p.fa > 0) {
+            attrs.push(`android:fillColor="${p.fc}"`);
+            if (p.fa < 1) attrs.push(`android:fillAlpha="${p.fa}"`);
+          }
+          if (p.sc && p.sw > 0) {
+            attrs.push(`android:strokeColor="${p.sc}"`);
+            attrs.push(`android:strokeWidth="${p.sw}"`);
+            if (p.sa < 1) attrs.push(`android:strokeAlpha="${p.sa}"`);
+            if (p.slc !== 'butt') attrs.push(`android:strokeLineCap="${p.slc}"`);
+            if (p.slj !== 'miter') attrs.push(`android:strokeLineJoin="${p.slj}"`);
+          }
+          if (p.ft !== 'nonZero') attrs.push(`android:fillType="${p.ft}"`);
+          xml += `    <path\n        ` + attrs.join('\n        ') + ` />\n`;
         }
-        if (p.sc && p.sw > 0) {
-          attrs.push(`android:strokeColor="${p.sc}"`);
-          attrs.push(`android:strokeWidth="${p.sw}"`);
-          if (p.sa < 1) attrs.push(`android:strokeAlpha="${p.sa}"`);
-          if (p.slc !== 'butt') attrs.push(`android:strokeLineCap="${p.slc}"`);
-          if (p.slj !== 'miter') attrs.push(`android:strokeLineJoin="${p.slj}"`);
-        }
-        if (p.ft !== 'nonZero') attrs.push(`android:fillType="${p.ft}"`);
-        xml += `    <path\n        ` + attrs.join('\n        ') + ` />\n`;
       }
       xml += `</vector>`;
-      return { xml, n: paths.length, w: outW, h: outH, vw: vbw, vh: vbh };
+      return { xml, n: pathCount, w: outW, h: outH, vw: vbw, vh: vbh, warnings: Array.from(warningsSet) };
     }
 
     /* ════ VD → PREVIEW SVG ══════════════════════════════════════════════ */
@@ -1381,7 +1601,7 @@
           for (const c of el.children) {
             const tag = (c.localName || c.tagName || '').toLowerCase();
             if (tag === 'path') {
-              const d = getVdAttr(c, 'pathData') || '';
+              const d = (getVdAttr(c, 'pathData') || '').replace(/[\r\n\t]+/g, ' ');
               const fillAttr = getVdAttr(c, 'fillColor');
               const fill = fillAttr ? androidHexToWebColor(fillAttr) : 'none';
               const fillAlpha = getVdAttr(c, 'fillAlpha') || '1';
@@ -1399,7 +1619,7 @@
                 if (slj !== 'miter') s += ` stroke-linejoin="${slj}"`;
               }
               s += ` fill-rule="${fr}"/>`;
-            } else if (tag === 'group') {
+            } else if (tag === 'group' || tag === 'clip-path') {
               walk(c);
             }
           }
@@ -1427,7 +1647,16 @@
 
     /* ════ STATE ═════════════════════════════════════════════════════════ */
     let store = [], active = -1;
-    function opts() { return { w: document.getElementById('optW').value.trim().toLowerCase(), h: document.getElementById('optH').value.trim().toLowerCase(), fix: document.getElementById('optFix').checked }; }
+    function opts() {
+      return {
+        w: document.getElementById('optW').value.trim().toLowerCase(),
+        h: document.getElementById('optH').value.trim().toLowerCase(),
+        fix: document.getElementById('optFix').checked,
+        name: document.getElementById('optName').checked,
+        clip: document.getElementById('optClip').checked,
+        wrap: document.getElementById('optWrap').checked
+      };
+    }
 
     /* ════ PROCESS ═══════════════════════════════════════════════════════ */
     async function run(files) {
@@ -1437,7 +1666,7 @@
       for (const f of list) {
         try {
           const res = convert(await f.text(), o);
-          store.push({ ok: true, name: f.name.replace(/\.svg$/i, '.xml'), xml: res.xml, svg: vd2svg(res.xml), n: res.n, w: res.w, h: res.h, vw: res.vw, vh: res.vh, t: now() });
+          store.push({ ok: true, name: f.name.replace(/\.svg$/i, '.xml'), xml: res.xml, svg: vd2svg(res.xml), n: res.n, w: res.w, h: res.h, vw: res.vw, vh: res.vh, warnings: res.warnings, t: now() });
         } catch (e) {
           store.push({ ok: false, name: f.name, err: e.message, t: now() });
         }
@@ -1495,6 +1724,8 @@
       document.getElementById('resultPanel').style.display = 'block';
       document.getElementById('dTitle').textContent = r.name;
       const st = document.getElementById('dStatus');
+      const wBox = document.getElementById('warnBox');
+
       if (r.ok) {
         st.textContent = 'Converted'; st.className = 'tag t-ok';
         document.getElementById('dPaths').textContent = `${r.n} path${r.n !== 1 ? 's' : ''}`;
@@ -1502,6 +1733,14 @@
         document.getElementById('dVP').textContent = `${r.vw}×${r.vh}`;
         document.getElementById('prevBox').innerHTML = r.svg || '<span style="color:var(--tx3);font-size:.72rem">No preview</span>';
         document.getElementById('xmlCode').innerHTML = hl(r.xml);
+
+        if (r.warnings && r.warnings.length > 0) {
+          wBox.style.display = 'block';
+          wBox.innerHTML = `<div class="warn-card"><div class="warn-card-header"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Conversion Warnings (${r.warnings.length})</div><ul class="warn-list">${r.warnings.map(w => `<li>${he(w)}</li>`).join('')}</ul></div>`;
+        } else {
+          wBox.style.display = 'none';
+          wBox.innerHTML = '';
+        }
       } else {
         st.textContent = 'Error'; st.className = 'tag t-er';
         document.getElementById('dPaths').textContent = '—';
@@ -1509,6 +1748,8 @@
         document.getElementById('dVP').textContent = '—';
         document.getElementById('prevBox').innerHTML = `<span style="color:#f87171;font-size:.78rem">${he(r.err)}</span>`;
         document.getElementById('xmlCode').textContent = '';
+        wBox.style.display = 'none';
+        wBox.innerHTML = '';
       }
     }
 
@@ -1712,6 +1953,21 @@
     window.addEventListener('dragover', e => { e.preventDefault(); document.getElementById('dropArea').classList.add('over'); });
     window.addEventListener('dragleave', e => { if (e.target === document.documentElement) document.getElementById('dropArea').classList.remove('over'); });
     window.addEventListener('drop', e => { e.preventDefault(); document.getElementById('dropArea').classList.remove('over'); if (e.dataTransfer.files.length) run(e.dataTransfer.files); });
+
+    // Global Clipboard Paste Listener (Ctrl+V)
+    window.addEventListener('paste', e => {
+      const text = (e.clipboardData || window.clipboardData).getData('text');
+      if (text && text.trim().includes('<svg')) {
+        e.preventDefault();
+        const fileName = 'pasted_vector_' + Date.now().toString().slice(-4) + '.svg';
+        const fileObj = {
+          name: fileName,
+          type: 'image/svg+xml',
+          text: () => Promise.resolve(text)
+        };
+        run([fileObj]);
+      }
+    });
 
     // Init
     renderList();
